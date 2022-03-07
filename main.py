@@ -17,7 +17,15 @@ def index():
 @main.route('/dashboard') 
 @login_required
 def dashboard():
-    return render_template('dashboard.html', name=current_user.name)
+    if (current_user.role==2):
+        return render_template('educatee.html', name=current_user.name)
+    else:
+        return render_template('dashboard.html', name=current_user.name)
+
+# @main.route('/checkgrades', methods=['GET', 'POST']) 
+# def checkgrades(): 
+#     return 'Grades'
+
 
 ####################################################################
 app = create_app() 
