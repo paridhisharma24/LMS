@@ -4,7 +4,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security \
          import generate_password_hash, check_password_hash
-from models import User
+from models import User, UserRoles
 from flask_login import login_user, logout_user, \
                                      login_required, current_user
 from __init__ import db
@@ -40,11 +40,15 @@ def login():
 
 def signup(): 
     if request.method=='GET': 
-        return render_template('signup.html')
+        return render_template('signup.html',roles=UserRoles.query.all())
     else: 
         email = request.form.get('email')
-        name = request.form.get('name')
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        phone_no = request.form.get('phone_no')
         password = request.form.get('password')
+        address = request.form.get('address')
+        dob = request.form.get('dob')
         role = request.form.get('role')
         salt = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 20))    
         user = User.query.filter_by(email=email).first()
@@ -52,10 +56,11 @@ def signup():
             flash('Email address already exists')
             return redirect(url_for('auth.signup'))
         
-        new_user = User(email=email, name=name, \
-                        password=generate_password_hash(password+salt, \
-                        method='sha256'),\
+        new_user = User(email=email, first_name=first_name, last_name  = last_name, \
+                        phone_no = phone_no, address = address, dob = dob, \
+                        password=generate_password_hash(password+salt, method='sha256'),\
                         role = role, salt = salt)
+        
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('auth.login'))

@@ -17,7 +17,7 @@ def index():
 @main.route('/dashboard') 
 @login_required
 def dashboard():
-    return render_template('dashboard.html', name=current_user.name)
+    return render_template('dashboard.html', name=(current_user.first_name+' '+current_user.last_name))
 
 ####################################################################
 app = create_app() 

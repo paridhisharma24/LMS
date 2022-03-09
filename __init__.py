@@ -1,9 +1,10 @@
 ####################################################################
 #################        Importing packages      ###################
 ####################################################################
-from flask import Flask
+from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_session import Session
 
 
 ##################################################################### init SQLAlchemy so we can use it later in our models
@@ -19,6 +20,10 @@ def create_app():
                    #will be saved
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
                    # deactivate Flask-SQLAlchemy track modifications
+    app.config["SESSION_PERMANENT"] = False
+    app.config["SESSION_TYPE"] = "filesystem"
+    Session(app)
+  
     db.init_app(app) # Initialiaze sqlite database
     # The login manager contains the code that lets your application    
     # and Flask-Login work together
