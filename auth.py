@@ -58,7 +58,11 @@ def signup():
         phone_no = request.form.get('phone_no')
         password = request.form.get('password')
         address = request.form.get('address')
-        dob = datetime.strptime(request.form.get('dob'),'%Y-%m-%d')
+        dob_temp = request.form.get('dob')
+        if dob_temp ==  '':
+            dob = None
+        else:
+            dob = datetime.strptime(dob_temp,'%Y-%m-%d')
         role = request.form.get('role')
         salt = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 20))    
         user = User.query.filter_by(email=email).first()

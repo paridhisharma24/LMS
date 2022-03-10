@@ -63,7 +63,8 @@ class User(UserMixin,db.Model):
                 
     role = db.Column(
         db.String(10),
-        db.ForeignKey('UserRoles.role')
+        db.ForeignKey('UserRoles.role'),
+        nullable = False
     )
 
     salt = db.Column(
