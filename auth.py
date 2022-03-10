@@ -1,6 +1,8 @@
 ####################################################################
 ##############          Import packages      #######################
 ####################################################################
+from hashlib import new
+from time import strptime
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security \
          import generate_password_hash, check_password_hash
@@ -9,7 +11,8 @@ from flask_login import login_user, logout_user, \
                                      login_required, current_user
 from __init__ import db
 import string    
-import random # define the random module  
+import random 
+from datetime import datetime 
 
 
 ####################################################################
@@ -40,7 +43,14 @@ def login():
 
 def signup(): 
     if request.method=='GET': 
-        return render_template('signup.html',roles=UserRoles.query.all())
+        # new_role = UserRoles(role="Admin",role_name="Adminstration")
+        # db.session.add(new_role)
+        # new_role = UserRoles(role="Educator",role_name="Educator")
+        # db.session.add(new_role)
+        # new_role = UserRoles(role="Educatee",role_name="Educatee")
+        # db.session.add(new_role)
+        # db.session.commit()
+        return render_template('signup.html',roles=db.session.query(UserRoles).all())
     else: 
         email = request.form.get('email')
         first_name = request.form.get('first_name')
@@ -48,7 +58,7 @@ def signup():
         phone_no = request.form.get('phone_no')
         password = request.form.get('password')
         address = request.form.get('address')
-        dob = request.form.get('dob')
+        dob = datetime.strptime(request.form.get('dob'),'%Y-%m-%d')
         role = request.form.get('role')
         salt = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 20))    
         user = User.query.filter_by(email=email).first()
