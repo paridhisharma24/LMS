@@ -141,7 +141,8 @@ class Course_Students(UserMixin,db.Model):
     )
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('User.user_id')
+        db.ForeignKey('User.user_id'),
+        primary_key = True
     )
 
 
@@ -155,5 +156,6 @@ class Course_Mentors(db.Model):
     )
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('User.user_id')
+        db.ForeignKey('User.user_id'),
+        primary_key = True
     )
