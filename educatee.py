@@ -2,8 +2,10 @@
 ###############          Import packages         ###################
 ####################################################################
 from flask import Blueprint, render_template, redirect, url_for, request, flash
+from sqlalchemy import null
 from werkzeug.security \
          import generate_password_hash, check_password_hash
+from db_model import course_details
 from db_model import Upload, course_students
 from models import User
 from flask_login import login_user, logout_user, \
@@ -29,22 +31,27 @@ def upload():
 ####################################################################
 @educatee.route('/checkgrades', methods=['GET', 'POST']) 
 def checkgrades(): 
-    grades = grades.query.filter_by(roll=current_user.user_id).all() # need to create grades database (roll no, couse name, couse grade)
+    grades = course_students.query.filter(course_students.user_id == current_user.id ).all() # need to create grades database (roll no, couse name, couse grade)
     grade_text = '<ul>'
     for grade in grades:
-        grade_text += '<li>' + grade.couse_name + ' -> ' + grade.course_grade + '</li>'
+        if(grade.course_grade==null):
+            return "Grades are not given"
+        grade_text += '<li>' + grade.course_name + ' -> ' + grade.course_grade + '</li>'
+    if( grade_text == '<ul>'):
+          return "Grades are not given"
     grade_text += '</ul>'
     return grade_text
-    return 'sql to db'
+   
 
 
 ####################################################################
 @educatee.route('/checkcourses', methods=['GET', 'POST']) 
 def checkcourses(): 
-    student_courses = course_students.query.filter_by(roll=current_user.user_id).all() #  course_students database 
-    grade_text = '<ul>'
-    for grade in grades:
-        grade_text += '<li>' + grade.couse_name + ' -> ' + grade.course_grade + '</li>'
-    grade_text += '</ul>'
-    return grade_text
-    return 'sql to courses'
+    course_list= db.session.query(course_students,course_details).filter(course_students.course_id==course_details.course_id).all()
+    courses_text= '<ul>'
+    for course in course_list:
+        if(course.user_id==current_user.id):
+         courses_text += '<li>' + course_list.course_id+ ' -> ' + course_list.course_name +'</li>'
+    courses_text += '</ul>'
+    return courses_text
+   

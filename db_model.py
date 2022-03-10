@@ -142,6 +142,10 @@ class course_students(UserMixin,db.Model):
         db.Integer,
         db.ForeignKey('user_details.user_id')
     )
+   # course_grade =db.Column(
+       # db.Integer,
+       # nullable =True)
+    
 
 
 class course_mentors(db.Model):
@@ -158,7 +162,7 @@ class course_mentors(db.Model):
     )
 
 class Upload(db.Model):
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer,primary_key=True)
     course_id=db.Column(db.String)
-    filename = db.Column(db.String(50),primary_key=True)
+    filename = db.Column(db.String(50))
     data = db.Column(db.LargeBinary)
