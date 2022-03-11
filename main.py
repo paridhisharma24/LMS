@@ -26,7 +26,7 @@ def index():
 @login_required
 def dashboard():
     if current_user.role == 'Admin':
-        return render_template('dashboard_admin.html', name=(current_user.first_name+' '+current_user.last_name))
+        return render_template('adminDashboard.html', name=(current_user.first_name+' '+current_user.last_name))
     elif current_user.role == 'Educatee':
         return render_template('dashboard_educatee.html', name=(current_user.first_name+' '+current_user.last_name))
     elif current_user.role == 'Educator':
