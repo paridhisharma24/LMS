@@ -1,4 +1,4 @@
-# Learning Management system
+# Learning Management System
 
 
 ## Description
@@ -9,7 +9,8 @@ The Learning Management System is an EdTech application that helps in delivering
 1. [ How to download ](#run)
 2. [ Set up  a Virtual Environment ](#venv)
 3. [ Install dependencies ](#usage)
-4. [ Run the website ](#start)
+4. [ Update flask-login ](#update)
+5. [ Run the website ](#start)
 
 <a name="run"></a>
 ## How to download
@@ -45,9 +46,28 @@ source <venv_name>/bin/activate
 pip install -r requirements.txt
 ```
 
+<a name="update"></a>
+## Update flask-login
+1. In the terminal, run:
+```
+cd <venv_name>/bin/flask_login
+```
+2. Open the file _mixins.py_:
+```
+python3 mixins.py
+```
+3. In the function *_get_id_ of _mixins.py_*, update return statement:
+```
+from:
+    return self.id
+to:
+    return self.user_id
+```
+
+
 <a name="start"></a>
 ## Run the Website
-1. In the terminal, type:
+1. In the terminal, run:
 ```
 python3 main.py
 ```
