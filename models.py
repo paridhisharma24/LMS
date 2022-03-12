@@ -18,6 +18,7 @@ class UserRoles(UserMixin,db.Model):
     details = db.relationship('User')
 
 
+#user specific details
 class User(UserMixin,db.Model):
     __tablename__ = 'User'
     first_name = db.Column(
@@ -75,6 +76,7 @@ class User(UserMixin,db.Model):
     mentor = db.relationship('Course_Mentors')
 
 
+# Available Courses
 class Course(UserMixin,db.Model):
     __tablename__ = 'Course'
     course_id = db.Column(
@@ -92,6 +94,7 @@ class Course(UserMixin,db.Model):
     mentor = db.relationship('Course_Mentors')
 
 
+#types of content like Assignments, notes, lecture, etc.
 class ContentTypes(UserMixin,db.Model):
     __tablename__ = 'ContentTypes' 
     content_id = db.Column(
@@ -107,6 +110,8 @@ class ContentTypes(UserMixin,db.Model):
     content = db.relationship('Contents')
 
 
+#contents of a course
+#link is drive link where the assignment is uploaded
 class Contents(UserMixin,db.Model):
     __tablename__ = 'Contents'
     date_of_upload = db.Column(
@@ -114,10 +119,15 @@ class Contents(UserMixin,db.Model):
         nullable=True
     )
 
+    content_id = db.Column(
+        db.Integer,
+        primary_key = True,
+        autoincrement=True
+    )
+
     course_id = db.Column(
         db.String(20),
-        db.ForeignKey('Course.course_id'),
-        primary_key = True
+        db.ForeignKey('Course.course_id')
     )
     
     content_type = db.Column(
@@ -129,8 +139,10 @@ class Contents(UserMixin,db.Model):
         db.String(150),
         nullable=False
     )
+    assignment = db.relationship('Assignment')
 
 
+#student and course mapping
 class Course_Students(UserMixin,db.Model):
     __tablename__ = 'Course_Students'
 
@@ -144,8 +156,13 @@ class Course_Students(UserMixin,db.Model):
         db.ForeignKey('User.user_id'),
         primary_key = True
     )
+    grade = db.Column(
+        db.String(10),
+        nullable=True
+    )
 
 
+#students and mentor mapping
 class Course_Mentors(db.Model):
     __tablename__ = 'Course_Mentors'
 
@@ -158,4 +175,25 @@ class Course_Mentors(db.Model):
         db.Integer,
         db.ForeignKey('User.user_id'),
         primary_key = True
+    )
+
+
+#details of assignment uploaded by students/mentees
+class Assignment(db.Model):
+    __tablename__ = 'Assignment'
+
+    assignment_id = db.Column(
+        db.String(20),
+        db.ForeignKey('Contents.content_id'),
+        primary_key = True
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('User.user_id'),
+    )
+
+    link = db.Column(
+        db.String(150),
+        nullable=False
     )

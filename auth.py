@@ -3,7 +3,7 @@
 ####################################################################
 from hashlib import new
 from time import strptime
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, session, url_for, request, flash
 from werkzeug.security \
          import generate_password_hash, check_password_hash
 from models import User, UserRoles
@@ -25,6 +25,9 @@ def login():
     if request.method=='GET': 
         return render_template('login.html')
     else:
+        if session.get('user'):
+            login_user(user, remember=remember)
+            return redirect(url_for('main.dashboard'))
         email = request.form.get('email')
         password = request.form.get('password')
         remember = True if request.form.get('remember') else False
@@ -35,7 +38,7 @@ def login():
         elif not check_password_hash(user.password, password+user.salt):
             flash('Please check your login details and try again.')
             return redirect(url_for('auth.login'))
-
+        session['user'] = user
         login_user(user, remember=remember)
         return redirect(url_for('main.dashboard'))
 ####################################################################
@@ -77,11 +80,14 @@ def signup():
         
         db.session.add(new_user)
         db.session.commit()
+        flash('You are sucess fully registered! Login now')
         return redirect(url_for('auth.login'))
+        # return redirect(url_for('auth.login'), flash('You are sucess fully registered! Login now'))
 
 ###################################################################
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
+    session[current_user] = None
     return redirect(url_for('main.index'))
