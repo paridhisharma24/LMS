@@ -76,6 +76,7 @@ class User(UserMixin,db.Model):
         db.Date,
         nullable=True
     )
+
     phone_no = db.relationship('PhoneNo')
     address = db.relationship('Address')
     student = db.relationship('CourseStudents')
@@ -299,7 +300,7 @@ class MenteeAssignment(db.Model):  #submission
         primary_key = True
     )
     
-    link = db.Column(
-        db.String(150),
+    data = db.Column(
+        db.LargeBinary,
         nullable=False
     )
