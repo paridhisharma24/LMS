@@ -40,7 +40,10 @@ virtualenv <venv_name>
 ```
 4. Activate the virtual environment (make sure you are in the same directory in which venv is created):
 ```
-source <venv_name>/bin/activate
+for Mac OS/ Linux:
+    source <venv_name>/bin/activate
+for Windows:
+    <venv_name>\Scripts\activate
 ```
 
 <a name="Install dependencies"></a>
