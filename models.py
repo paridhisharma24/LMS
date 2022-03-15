@@ -2,53 +2,31 @@ from flask import Flask
 from __init__ import db
 from flask_login import UserMixin
 
-
-class UserRoles(UserMixin,db.Model):
+#available user roles: Admin, Mentor, Mentee 
+class UserRoles(UserMixin, db.Model):
     __tablename__ = 'UserRoles'
 
     role = db.Column(
-        db.String(10),
-        primary_key=True
+        db.Integer,
+        primary_key=True,
+        autoincrement=True
     )
     role_name = db.Column(
         db.String(30),
         unique=True,
         nullable=False
     )
-    details = db.relationship('User')
+    login = db.relationship('User')
+    #dictionary to map roles to id
 
 
-#user specific details
-class User(UserMixin,db.Model):
-    __tablename__ = 'User'
-    first_name = db.Column(
-        db.String(100),
-        nullable=False
-    )
-
-    last_name = db.Column(
-        db.String(100),
-        nullable=False
-    )
-    
-    phone_no = db.Column(
-        db.String(10),
-        nullable=False
-    )
-
-    dob = db.Column(
-        db.Date,
-        nullable=True
-    )
-
-    address = db.Column(
-        db.String(150),
-        nullable=True
-    )
+class LoginDetails(UserMixin, db.Model):
+    __tablename__ = 'LoginDetails'
 
     user_id = db.Column(
         db.Integer, 
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     ) 
 
     email = db.Column(
@@ -61,26 +39,117 @@ class User(UserMixin,db.Model):
         db.String(20),
         nullable=False
     )
-                
-    role = db.Column(
-        db.String(10),
-        db.ForeignKey('UserRoles.role'),
-        nullable = False
-    )
 
     salt = db.Column(
         db.String(20),
         nullable=False
     )
-    student = db.relationship('Course_Students')
-    mentor = db.relationship('Course_Mentors')
+    user = db.relationship('User')
 
 
-# Available Courses
+#user specific details
+class User(UserMixin,db.Model):
+    __tablename__ = 'User'
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('LoginDetails.user_id'),
+        primary_key=True
+    )
+
+    role = db.Column(
+        db.Integer,
+        db.ForeignKey('UserRoles.role'),
+        nullable = False
+    )
+
+    first_name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    last_name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    dob = db.Column(
+        db.Date,
+        nullable=True
+    )
+
+    phone_no = db.relationship('PhoneNo')
+    address = db.relationship('Address')
+    student = db.relationship('CourseStudents')
+    mentor = db.relationship('CourseInstance')
+    mentor_content = db.relationship('MentorContent')
+
+
+#phone numbers of users
+class PhoneNo(UserMixin, db.Model):
+    __tablename__ = 'PhoneNo'
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('User.user_id'),
+        primary_key=True
+    )
+    phone = db.Column(
+        db.String(15),
+        nullable=False,
+        primary_key=True
+    )
+
+
+#address of user
+class Address(UserMixin, db.Model):
+    __tablename__ = 'Address'
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('User.user_id'),
+        primary_key=True
+    )
+
+    house_no = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    street = db.Column(
+        db.String(20),
+        nullable=True
+    )
+
+    locality = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    city = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    state = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    pincode= db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    country = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+
+#Available courses 
 class Course(UserMixin,db.Model):
     __tablename__ = 'Course'
     course_id = db.Column(
-        db.String(20),
+        db.Integer,
         nullable=False,
         primary_key=True
     )
@@ -89,35 +158,33 @@ class Course(UserMixin,db.Model):
         db.String(50),
         nullable=False
     )
-    content = db.relationship('Contents')
-    students = db.relationship('Course_Students')
-    mentor = db.relationship('Course_Mentors')
+    content = db.relationship('MentorContent')
+    students = db.relationship('CourseStudents')
+    mentor = db.relationship('CourseInstance')
 
 
-#types of content like Assignments, notes, lecture, etc.
+#types of content like Assignment, notes, lecture, etc.
 class ContentTypes(UserMixin,db.Model):
     __tablename__ = 'ContentTypes' 
+
     content_id = db.Column(
-        db.String(20),
+        db.Integer,
         nullable=False,
-        primary_key = True
+        primary_key = True,
+        autoincrement=True 
     )
-    ass_name = db.Column(
+
+    content_name = db.Column(
         db.String(50),
         unique=True,
         nullable=False
     )
-    content = db.relationship('Contents')
+    content = db.relationship('MentorContent')
 
 
-#contents of a course
-#link is drive link where the assignment is uploaded
-class Contents(UserMixin,db.Model):
-    __tablename__ = 'Contents'
-    date_of_upload = db.Column(
-        db.Date,
-        nullable=True
-    )
+#contents of a course uploaded by a mentor - Assignment, Notes
+class MentorContent(UserMixin,db.Model):
+    __tablename__ = 'MentorContent'
 
     content_id = db.Column(
         db.Integer,
@@ -125,75 +192,115 @@ class Contents(UserMixin,db.Model):
         autoincrement=True
     )
 
+    mentor_id = db.Column(
+        db.Integer,
+        db.ForeignKey('User.user_id')
+    )
+
     course_id = db.Column(
-        db.String(20),
+        db.Integer,
         db.ForeignKey('Course.course_id')
     )
+
+    upload_date = db.Column(
+        db.Date,
+        nullable=True
+    )
+
+    due_date = db.Column(
+        db.Date,
+        nullable=True
+    )
     
-    content_type = db.Column(
-        db.String(20),
+    type = db.Column(
+        db.Integer,
         db.ForeignKey('ContentTypes.content_id')
     )
 
-    link = db.Column(
-        db.String(150),
+    data = db.Column(
+        db.LargeBinary,
         nullable=False
     )
-    assignment = db.relationship('Assignment')
+    assignment = db.relationship('MenteeAssignment')
 
 
 #student and course mapping
-class Course_Students(UserMixin,db.Model):
+class CourseStudents(UserMixin,db.Model):
     __tablename__ = 'Course_Students'
 
     course_id = db.Column(
-        db.String(20),
+        db.Integer,
         db.ForeignKey('Course.course_id'),
         primary_key = True
     )
-    user_id = db.Column(
+
+    student_id = db.Column(
         db.Integer,
         db.ForeignKey('User.user_id'),
         primary_key = True
     )
+
     grade = db.Column(
         db.String(10),
         nullable=True
     )
 
 
-#students and mentor mapping
-class Course_Mentors(db.Model):
-    __tablename__ = 'Course_Mentors'
+#course and mentor mapping
+class CourseInstance(db.Model):
+    __tablename__ = 'CourseInstance'
 
-    course_id = db.Column(
-        db.String(20),
-        db.ForeignKey('Course.course_id'),
+    instance_id = db.Column(
+        db.Integer,
+        autoincrement=True,
         primary_key = True
     )
-    user_id = db.Column(
+
+    course_id = db.Column(
         db.Integer,
-        db.ForeignKey('User.user_id'),
-        primary_key = True
+        db.ForeignKey('Course.course_id')
+    )
+
+    mentor_id = db.Column(
+        db.Integer,
+        db.ForeignKey('User.user_id')
+    )
+
+    start_date = db.Column(
+        db.Date,
+        nullable=True
+    )
+
+    end_date = db.Column(
+        db.Date,
+        nullable=True
+    )
+
+    upload_date = db.Column(
+        db.Date,
+        nullable=True
     )
 
 
 #details of assignment uploaded by students/mentees
-class Assignment(db.Model):
-    __tablename__ = 'Assignment'
+#mentee - assignment
+
+class MenteeAssignment(db.Model):  #submission
+    __tablename__ = 'MenteeAssignment'
 
     assignment_id = db.Column(
-        db.String(20),
-        db.ForeignKey('Contents.content_id'),
+        db.Integer,
+        db.ForeignKey('MentorContent.content_id'),
         primary_key = True
     )
 
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('User.user_id'),
+        primary_key = True
     )
-
-    link = db.Column(
-        db.String(150),
+    
+    data = db.Column(
+        db.LargeBinary,
         nullable=False
     )
