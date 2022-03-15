@@ -17,7 +17,7 @@ The Learning Management System is an EdTech application that helps in delivering
 1. Make sure you have Git properly setup using your GitHub account.
 2. Run the following command in terminal to clone this repository in your device locally:
 ```
-git clone https://github.com/<your_username>/LMS.git
+git clone https://github.com/paridhisharma24/LMS.git
 ```
 
 <a name="venv"></a>
