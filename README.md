@@ -30,9 +30,13 @@ sudo apt update
 ```
 sudo apt install python3-pip
 ```
-3. Setup virtual environment:
+3. Install virtual environment package:
 ```
-pip install <venv_name>
+pip install virtualenv
+```
+4. Create virtual environment (<venv_name> is user specifiedname):
+```
+virtualenv <venv_name>
 ```
 4. Activate the virtual environment (make sure you are in the same directory in which venv is created):
 ```
@@ -48,14 +52,11 @@ pip install -r requirements.txt
 
 <a name="update"></a>
 ## Update flask-login
-1. In the terminal, run:
+1. Go to:
 ```
-cd <venv_name>/bin/flask_login
+<venv_name>/bin/flask_login
 ```
-2. Open the file _mixins.py_:
-```
-python3 mixins.py
-```
+2. Open the file _mixins.py_
 3. In the function *_get_id_ of _mixins.py_*, update return statement:
 ```
 from:
