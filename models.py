@@ -7,15 +7,16 @@ class UserRoles(UserMixin, db.Model):
     __tablename__ = 'UserRoles'
 
     role = db.Column(
-        db.String(10),
-        primary_key=True
+        db.Integer,
+        primary_key=True,
+        autoincrement=True
     )
     role_name = db.Column(
         db.String(30),
         unique=True,
         nullable=False
     )
-    login = db.relationship('LoginDetails')
+    login = db.relationship('User')
     #dictionary to map roles to id
 
 
@@ -38,12 +39,6 @@ class LoginDetails(UserMixin, db.Model):
         db.String(20),
         nullable=False
     )
-                
-    role = db.Column(
-        db.String(10),
-        db.ForeignKey('UserRoles.role'),
-        nullable = False
-    )
 
     salt = db.Column(
         db.String(20),
@@ -59,6 +54,12 @@ class User(UserMixin,db.Model):
         db.Integer,
         db.ForeignKey('LoginDetails.user_id'),
         primary_key=True
+    )
+
+    role = db.Column(
+        db.Integer,
+        db.ForeignKey('UserRoles.role'),
+        nullable = False
     )
 
     first_name = db.Column(
@@ -79,6 +80,7 @@ class User(UserMixin,db.Model):
     address = db.relationship('Address')
     student = db.relationship('CourseStudents')
     mentor = db.relationship('CourseInstance')
+    mentor_content = db.relationship('MentorContent')
 
 
 #phone numbers of users
@@ -167,7 +169,8 @@ class ContentTypes(UserMixin,db.Model):
     content_id = db.Column(
         db.Integer,
         nullable=False,
-        primary_key = True
+        primary_key = True,
+        autoincrement=True 
     )
 
     content_name = db.Column(
@@ -182,20 +185,30 @@ class ContentTypes(UserMixin,db.Model):
 class MentorContent(UserMixin,db.Model):
     __tablename__ = 'MentorContent'
 
-    upload_date = db.Column(
-        db.Date,
-        nullable=True
-    )
-
     content_id = db.Column(
         db.Integer,
         primary_key = True,
         autoincrement=True
     )
 
+    mentor_id = db.Column(
+        db.Integer,
+        db.ForeignKey('User.user_id')
+    )
+
     course_id = db.Column(
         db.Integer,
         db.ForeignKey('Course.course_id')
+    )
+
+    upload_date = db.Column(
+        db.Date,
+        nullable=True
+    )
+
+    due_date = db.Column(
+        db.Date,
+        nullable=True
     )
     
     type = db.Column(
@@ -244,14 +257,12 @@ class CourseInstance(db.Model):
 
     course_id = db.Column(
         db.Integer,
-        db.ForeignKey('Course.course_id'),
-        primary_key = True
+        db.ForeignKey('Course.course_id')
     )
 
     mentor_id = db.Column(
         db.Integer,
-        db.ForeignKey('User.user_id'),
-        primary_key = True
+        db.ForeignKey('User.user_id')
     )
 
     start_date = db.Column(
@@ -278,13 +289,14 @@ class MenteeAssignment(db.Model):  #submission
 
     assignment_id = db.Column(
         db.Integer,
-        db.ForeignKey('MentorContent.upload_id'),
+        db.ForeignKey('MentorContent.content_id'),
         primary_key = True
     )
 
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('User.user_id'),
+        primary_key = True
     )
     
     link = db.Column(

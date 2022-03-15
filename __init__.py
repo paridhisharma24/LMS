@@ -9,6 +9,7 @@ from flask_session import Session
 
 ##################################################################### init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
+
 ####################################################################
 def create_app():
     app = Flask(__name__) # creates the Flask instance, __name__ is  
