@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# Learning Management System
-=======
 # Learning Management system
->>>>>>> origin/db-update
 
 
 ## Description
@@ -13,23 +9,15 @@ The Learning Management System is an EdTech application that helps in delivering
 1. [ How to download ](#run)
 2. [ Set up  a Virtual Environment ](#venv)
 3. [ Install dependencies ](#usage)
-<<<<<<< HEAD
 4. [ Update flask-login ](#update)
 5. [ Run the website ](#start)
-=======
-4. [ Run the website ](#start)
->>>>>>> origin/db-update
 
 <a name="run"></a>
 ## How to download
 1. Make sure you have Git properly setup using your GitHub account.
 2. Run the following command in terminal to clone this repository in your device locally:
 ```
-<<<<<<< HEAD
 git clone https://github.com/paridhisharma24/LMS.git
-=======
-git clone https://github.com/<your_username>/LMS.git
->>>>>>> origin/db-update
 ```
 
 <a name="venv"></a>
@@ -42,7 +30,6 @@ sudo apt update
 ```
 sudo apt install python3-pip
 ```
-<<<<<<< HEAD
 3. Install virtual environment package:
 ```
 pip install virtualenv
@@ -57,15 +44,6 @@ for Mac OS/ Linux:
     source <venv_name>/bin/activate
 for Windows:
     <venv_name>\Scripts\activate
-=======
-3. Setup virtual environment:
-```
-pip install <venv_name>
-```
-4. Activate the virtual environment (make sure you are in the same directory in which venv is created):
-```
-source <venv_name>/bin/activate
->>>>>>> origin/db-update
 ```
 
 <a name="Install dependencies"></a>
@@ -75,7 +53,6 @@ source <venv_name>/bin/activate
 pip install -r requirements.txt
 ```
 
-<<<<<<< HEAD
 <a name="update"></a>
 ## Update flask-login
 1. Go to:
@@ -95,11 +72,6 @@ to:
 <a name="start"></a>
 ## Run the Website
 1. In the terminal, run:
-=======
-<a name="start"></a>
-## Run the Website
-1. In the terminal, type:
->>>>>>> origin/db-update
 ```
 python3 main.py
 ```
