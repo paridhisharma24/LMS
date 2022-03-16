@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+    Welcome, {{name}}! <br>
+    <a href="{{ url_for('admin.addCourse') }}"><button>Add Course</button></a>
+    <a href="{{ url_for('admin.addStudent') }}"><button>Register Student</button></a>
+    <a href="{{ url_for('admin.addInstructor') }}"><button>Add Instructor</button></a>
+</h1>
+<h1 class="title">Add Instructor to a course</h1>
+<form action="#">
+    <input type="text" name="courseId" placeholder="Enter Course Number">
+    <br><br>
+    <input type="text" name="studentId" placeholder="Enter Instructor ID">
+    <br><br>
+    <input type="submit" value="Add Instructor">
+</form>
+{{message}}
+{% endblock %}
