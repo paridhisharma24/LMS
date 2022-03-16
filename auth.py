@@ -1,6 +1,3 @@
-####################################################################
-##############          Import packages      #######################
-####################################################################
 from hashlib import new
 from time import strptime
 from flask import Blueprint, render_template, redirect, session, url_for, request, flash
@@ -15,19 +12,17 @@ import random
 from datetime import datetime 
 
 
-####################################################################
-auth = Blueprint('auth', __name__) # create a Blueprint object that 
-                                   # we name 'auth'
+auth = Blueprint('auth', __name__) 
 
-####################################################################
+
 @auth.route('/login', methods=['GET', 'POST']) 
 def login(): 
     if request.method=='GET': 
+        if session.get('user'):
+            login_user(user)
+            return redirect(url_for('main.dashboard'))
         return render_template('login.html')
     else:
-        if session.get('user'):
-            login_user(user, remember=remember)
-            return redirect(url_for('main.dashboard'))
         email = request.form.get('email')
         password = request.form.get('password')
         remember = True if request.form.get('remember') else False
@@ -41,7 +36,7 @@ def login():
         session['user'] = user
         login_user(user, remember=remember)
         return redirect(url_for('main.dashboard'))
-####################################################################
+
 @auth.route('/signup', methods=['GET', 'POST'])
 
 def signup(): 
@@ -74,7 +69,7 @@ def signup():
         return redirect(url_for('auth.login'))
         # return redirect(url_for('auth.login'), flash('You are sucess fully registered! Login now'))
 
-###################################################################
+
 @auth.route('/logout')
 @login_required
 def logout():
