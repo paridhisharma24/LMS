@@ -82,6 +82,7 @@ class User(UserMixin,db.Model):
     student = db.relationship('CourseStudents')
     mentor = db.relationship('CourseInstance')
     mentor_content = db.relationship('MentorContent')
+    grade = db.relationship('Grade')
 
 
 #phone numbers of users
@@ -300,7 +301,39 @@ class MenteeAssignment(db.Model):  #submission
         primary_key = True
     )
     
+    date_of_sub = db.Column(
+        db.Date,
+        nullable=True
+    )
+
     data = db.Column(
         db.LargeBinary,
+        nullable=False
+    )
+    grade = db.relationship('MenteeAssignment')
+
+
+class Grade(db.Model):  #submission
+    __tablename__ = 'Grade'
+
+    id = db.Column(
+        db.Integer,
+        db.ForeignKey('MenteeAssignment.assignment_id'),
+        primary_key = True
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('User.user_id'),
+        primary_key = True
+    )
+
+    score = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    max_marks = db.Column(
+        db.Integer,
         nullable=False
     )
