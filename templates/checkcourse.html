@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<table>
+    <tr>
+        <th>Course Id</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+
+    </tr>
+
+    {% for deets in mentor_courses %}
+        
+        <tr>
+            <td>{{deets.course_id}}</td>
+            <td>{{deets.start_date}}</td>
+            <td>{{deets.end_date}}</td>
+        </tr>
+        
+    {% endfor %}
+
+</table>
+{% endblock %}

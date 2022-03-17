@@ -4,7 +4,7 @@
 from flask import Blueprint, render_template, flash
 from flask_login import login_required, current_user
 from __init__ import create_app, db
-from models import ContentTypes, UserRoles
+from models import ContentTypes, Course
 
 ####################################################################
 # our main blueprint
@@ -36,13 +36,12 @@ def index():
 def dashboard():
     if current_user.role == 1:
         return render_template('dashboard_admin.html', name=(current_user.first_name+' '+current_user.last_name))
+    elif current_user.role == 2:
+        return render_template('educator.html', name=(current_user.first_name+' '+current_user.last_name))
     elif current_user.role == 3:
         return render_template('educatee.html', name=(current_user.first_name+' '+current_user.last_name))
     else:
         return render_template('dashboard.html', name=(current_user.first_name+' '+current_user.last_name))
-
-    #return render_template('educator.html', name=current_user.first_name)
-    #return render_template('educator.html', name=(current_user.first_name+' '+current_user.last_name), r=current_user.role, content=db.session.query(ContentTypes).all())
 
 ####################################################################
 app = create_app() 

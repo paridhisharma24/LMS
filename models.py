@@ -50,10 +50,17 @@ class LoginDetails(UserMixin, db.Model):
 #user specific details
 class User(UserMixin,db.Model):
     __tablename__ = 'User'
+    
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('LoginDetails.user_id'),
         primary_key=True
+    )
+
+    email = db.Column(
+        db.String(100),
+        unique=True,
+        nullable=False
     )
 
     role = db.Column(
@@ -82,6 +89,7 @@ class User(UserMixin,db.Model):
     student = db.relationship('CourseStudents')
     mentor = db.relationship('CourseInstance')
     mentor_content = db.relationship('MentorContent')
+    grade = db.relationship('Grade')
 
 
 #phone numbers of users
@@ -92,6 +100,7 @@ class PhoneNo(UserMixin, db.Model):
         db.ForeignKey('User.user_id'),
         primary_key=True
     )
+
     phone = db.Column(
         db.String(15),
         nullable=False,
@@ -276,10 +285,6 @@ class CourseInstance(db.Model):
         nullable=True
     )
 
-    upload_date = db.Column(
-        db.Date,
-        nullable=True
-    )
 
 
 #details of assignment uploaded by students/mentees
@@ -300,7 +305,39 @@ class MenteeAssignment(db.Model):  #submission
         primary_key = True
     )
     
+    date_of_sub = db.Column(
+        db.Date,
+        nullable=True
+    )
+
     data = db.Column(
         db.LargeBinary,
+        nullable=False
+    )
+    grade = db.relationship('Grade')
+
+
+class Grade(db.Model):  #submission
+    __tablename__ = 'Grade'
+
+    id = db.Column(
+        db.Integer,
+        db.ForeignKey('MenteeAssignment.assignment_id'),
+        primary_key = True
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('User.user_id'),
+        primary_key = True
+    )
+
+    score = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    max_marks = db.Column(
+        db.Integer,
         nullable=False
     )
