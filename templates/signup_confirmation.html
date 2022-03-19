@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="title">
+    New Users Added!!   
+</h1>
+
+<div>
+    Failed Users are:
+    {% for faili in failed %}
+        {{faili}} <br>
+    {% endfor %}
+</div>
+
+<div>
+    <a href= "{{ url_for ('main.dashboard') }}" >Go Back to dashboard</a>
+</div>
+
+{% endblock %}

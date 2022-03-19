@@ -1,9 +1,10 @@
 from hashlib import new
 from time import strptime
 from flask import Blueprint, render_template, redirect, session, url_for, request, flash
+from numpy import append
 from werkzeug.security \
          import generate_password_hash, check_password_hash
-from models import User, UserRoles, LoginDetails
+from models import User, UserRoles, LoginDetails, PhoneNo, Address
 from flask_login import login_user, logout_user, \
                                      login_required, current_user
 from __init__ import db
@@ -56,8 +57,6 @@ def signup():
         first_name  = request.form.get('first_name')
         last_name  = request.form.get('last_name')
 
-        # phone_no = request.form.get('phone_no')
-        # address = request.form.get('address')
         dob_temp = request.form.get('dob')
         if dob_temp == '':
            dob = None
@@ -75,8 +74,11 @@ def signup():
                                 first_name = first_name, last_name = last_name )
 
         new_user = User( dob = dob)
+        phone_no = PhoneNo( phone = request.form.get('phone_no'))
+        # address = request.form.get('address')
         
         new_login.user.append(new_user)
+        new_user.phone_no.append(phone_no)
         db.session.add(new_login)
         db.session.commit()
         flash('You are sucess fully registered! Login now')

@@ -1,9 +1,16 @@
+from cmath import nan
 import pandas as pd
-from flask import Blueprint,redirect,url_for,request,render_template
+import string    
+import random 
+from datetime import datetime 
+from flask import Blueprint, flash,redirect,url_for,request,render_template
 from sqlalchemy import null
 from __init__ import db
 from flask_login import current_user
-from models import Course, CourseStudents, CourseInstance
+from models import Course, CourseStudents, CourseInstance, User, LoginDetails
+from hashlib import new
+from time import strptime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 admin = Blueprint('admin',__name__)
 
@@ -12,11 +19,43 @@ def signUpUser():
     if request.method == 'POST':
         file = request.files['file']
         data = pd.read_excel(file).to_dict()
-        
-        new_login = [data['Roll Number'][0],data['Name of Student'][0]]
-        return f'Uploaded: {new_login}'
-    return redirect(url_for('main.dashboard'))
 
+        failed = []
+        
+        for i in range(len(data['email'])):
+            email = data['email'][i]
+            password = data['password'][i]
+            first_name = data['First Name'][i]
+            last_name = data['Last Name'][i]
+            # from a timestamp obeject to string(only the date part)
+            dob_temp = str(data['dob'][i]).split()[0]
+            if dob_temp == 'nan':
+                dob = None
+            else:
+                dob = datetime.strptime(dob_temp,'%Y-%m-%d')
+
+            role = data['role'][i]
+            salt = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 20))    
+            user = LoginDetails.query.filter_by(email=email).first()
+            if user: #user with same email exists
+                # flash('Email address already exists')
+                print(user)
+                failed.append({'seq_no':i,'name':(first_name+' '+last_name)})
+                # return redirect(url_for('auth.signup'))
+            else:            
+                new_login = LoginDetails(email=email,password=generate_password_hash(password+salt, method='sha256'), salt = salt, role = role,\
+                                    first_name = first_name, last_name = last_name )
+                new_user = User( dob = dob)
+                # phone_no = PhoneNo( phone = request.form.get('phone_no'))
+                # address = request.form.get('address')
+                new_login.user.append(new_user)
+                # new_user.phone_no.append(phone_no)
+                print(new_login)
+                db.session.add(new_login)
+                db.session.commit()
+        # flash('New Users added!!')
+        
+    return render_template('signup_confirmation.html',failed = failed)
 
 
 @admin.route('/addCourse',methods=['GET','POST'])
