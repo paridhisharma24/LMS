@@ -6,7 +6,9 @@ from flask_login import current_user
 from __init__ import db
 from datetime import date
 import pandas as pd
-
+from sqlalchemy.orm import sessionmaker
+Session = sessionmaker()
+session = Session()
 
 educator = Blueprint('educator', __name__)
 
@@ -66,7 +68,7 @@ def addGrades():
 def checkcourses(): 
     
     mentor_courses = CourseInstance.query.filter(CourseInstance.mentor_id == current_user.user_id).all()
-    #course_name = Course.query.filter(mentor_courses.course_id == Course.course_id).all()
+    #course_name = Course.query.filter(Course.course_id in mentor_courses.course_id)
 
     return render_template('checkcourse.html', mentor_courses=mentor_courses)
 
