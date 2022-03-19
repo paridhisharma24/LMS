@@ -17,9 +17,9 @@ def upload():
     if request.method == 'POST':
         file = request.files['file']
 
-        upload = MenteeAssignment(filename=file.filename, data=file.read())
-        db.session.add(upload)
-        db.session.commit()
+        # upload = MenteeAssignment(filename=file.filename, data=file.read())
+        # db.session.add(upload)
+        # db.session.commit()
 
         return f'Uploaded: {file.filename}'
     return redirect(url_for('main.dashboard'))

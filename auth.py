@@ -18,17 +18,17 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login', methods=['GET', 'POST']) 
 def login(): 
     if request.method=='GET': 
-    #     if session.get('user'):
-    #         login_user(session['user'])
-    #         if current_user.role == 1:
-    #             return render_template('dashboard_admin.html', name=(current_user.first_name+' '+current_user.last_name))
-    #         elif current_user.role == 3:
-    #             return render_template('educatee.html', name=(current_user.first_name+' '+current_user.last_name))
-    #         else:
-    #             return render_template('dashboard.html', name=(current_user.first_name+' '+current_user.last_name))
+        if session.get('user'):
+            login_user(session['user'])
+            if current_user.role == 1:
+                return render_template('dashboard_admin.html', name=(current_user.first_name+' '+current_user.last_name))
+            elif current_user.role == 3:
+                return render_template('dashboard_educatee.html', name=(current_user.first_name+' '+current_user.last_name))
+            else:
+                return render_template('dashboard_dashboard.html', name=(current_user.first_name+' '+current_user.last_name))
 
-    #     else:
-        return render_template('login.html')
+        else:
+            return render_template('login.html')
     else:
         email = request.form.get('email')
         password = request.form.get('password')
