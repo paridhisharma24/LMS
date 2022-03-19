@@ -1,35 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <h1 class="title">
-    Welcome, {{name}} (Educator!)! 
-    role: {{r}}
-    
+    Welcome, {{name}}! (Educator)   
 </h1>
 
+<a href= "{{ url_for ('educator.addContent') }}" >Add Course</a>
 
-<div><form method="POST" action="/checkgrades"><button>Check grades</button></form></div>
+<a href="{{ url_for('educator.addGrades') }}" >Add Grade</a>
 
-<div><form method="POST" action="/checkcourses"><button>Check couses</button></form></div>
-
-<div class="upload">
-    <form method="POST" action="/uploadcontent" enctype="multipart/form-data">
-        <input type="file" name="file">
-
-        <div class="field">
-            <div class="control"> Select Type:
-                <select id="content_id" name="content_id">
-                    <option value="0" disabled selected>Select</option>
-                    {% for c in content %}
-                    <option value={{c.content_id}}>{{c.content_name}}</option>
-                    {% endfor %}
-                </select>
-                <!-- <input class="input is-large" type="text" name="password" placeholder="Password"> -->
-            </div>
-        </div>
-
-        <button>Submit</button>
-    </form>
-</div>
+<a href="{{ url_for('educator.checkcourses') }}" >Check Courses</a>
 
 {% endblock %}

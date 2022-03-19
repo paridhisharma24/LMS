@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Add Grades</h1>
+
+<div class="upload">
+    <form method="POST" action="/addGrades" enctype="multipart/form-data">
+        <input type="file" name="file">
+        
+        <button>Submit</button>
+    </form>
+</div>
+
+{% endblock %}

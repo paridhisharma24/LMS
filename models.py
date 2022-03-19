@@ -287,10 +287,10 @@ class CourseInstance(db.Model):
         nullable=True
     )
 
-    # upload_date = db.Column(
-    #     db.Date,
-    #     nullable=True
-    # )
+    upload_date = db.Column(
+        db.Date,
+        nullable=True
+    )
 
 
 #details of assignment uploaded by students/mentees
@@ -324,4 +324,30 @@ class MenteeAssignment(db.Model):  #submission
     grade = db.Column(
         db.String(10),
         nullable=True
+    )
+
+
+class Grade(db.Model):  #submission
+    __tablename__ = 'Grade'
+
+    id = db.Column(
+        db.Integer,
+        db.ForeignKey('MenteeAssignment.assignment_id'),
+        primary_key = True
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('User.user_id'),
+        primary_key = True
+    )
+
+    score = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    max_marks = db.Column(
+        db.Integer,
+        nullable=False
     )
