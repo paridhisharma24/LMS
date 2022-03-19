@@ -307,8 +307,27 @@ class MenteeAssignment(db.Model):  #submission
 
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('User.user_id'),
-        primary_key = True
+        db.ForeignKey('Course.course_id')
+    )
+
+    mentor_id = db.Column(
+        db.Integer,
+        db.ForeignKey('User.user_id')
+    )
+
+    start_date = db.Column(
+        db.Date,
+        nullable=True
+    )
+
+    end_date = db.Column(
+        db.Date,
+        nullable=True
+    )
+
+    upload_date = db.Column(
+        db.Date,
+        nullable=True
     )
     
     data = db.Column(

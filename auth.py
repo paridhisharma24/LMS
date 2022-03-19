@@ -11,6 +11,7 @@ import string
 import random 
 from datetime import datetime 
 
+auth = Blueprint('auth', __name__) 
 
 auth = Blueprint('auth', __name__) 
 
@@ -81,7 +82,6 @@ def signup():
         flash('You are sucess fully registered! Login now')
         return redirect(url_for('auth.login'))
         # return redirect(url_for('auth.login'), flash('You are sucess fully registered! Login now'))
-
 
 @auth.route('/logout')
 @login_required
