@@ -41,6 +41,8 @@ def dashboard():
         return render_template('dashboard_admin.html', name=(current_user.first_name+' '+current_user.last_name))
     elif current_user.role == 3:
         return render_template('educatee.html', name=(current_user.first_name+' '+current_user.last_name))
+    elif current_user.role == 2:
+        return render_template('educator.html', name=(current_user.first_name+' '+current_user.last_name))
     else:
         return render_template('dashboard.html', name=(current_user.first_name+' '+current_user.last_name))
 
