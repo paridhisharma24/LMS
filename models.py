@@ -16,7 +16,7 @@ class UserRoles(UserMixin, db.Model):
         unique=True,
         nullable=False
     )
-    login = db.relationship('User')
+    login = db.relationship('LoginDetails')
     #dictionary to map roles to id
 
 
@@ -44,18 +44,7 @@ class LoginDetails(UserMixin, db.Model):
         db.String(20),
         nullable=False
     )
-    user = db.relationship('User')
-
-
-#user specific details
-class User(UserMixin,db.Model):
-    __tablename__ = 'User'
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey('LoginDetails.user_id'),
-        primary_key=True
-    )
-
+    
     role = db.Column(
         db.Integer,
         db.ForeignKey('UserRoles.role'),
@@ -72,6 +61,28 @@ class User(UserMixin,db.Model):
         nullable=False
     )
 
+    user = db.relationship('User')
+
+
+#user specific details
+class User(UserMixin,db.Model):
+    __tablename__ = 'User'
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('LoginDetails.user_id'),
+        primary_key=True
+    )
+
+    # first_name = db.Column(
+    #     db.String(100),
+    #     nullable=False
+    # )
+
+    # last_name = db.Column(
+    #     db.String(100),
+    #     nullable=False
+    # )
+    
     dob = db.Column(
         db.Date,
         nullable=True
@@ -276,10 +287,10 @@ class CourseInstance(db.Model):
         nullable=True
     )
 
-    upload_date = db.Column(
-        db.Date,
-        nullable=True
-    )
+    # upload_date = db.Column(
+    #     db.Date,
+    #     nullable=True
+    # )
 
 
 #details of assignment uploaded by students/mentees
@@ -303,4 +314,14 @@ class MenteeAssignment(db.Model):  #submission
     data = db.Column(
         db.LargeBinary,
         nullable=False
+    )
+
+    filename = db.Column(
+        db.String(30),
+        nullable = False
+    )
+
+    grade = db.Column(
+        db.String(10),
+        nullable=True
     )

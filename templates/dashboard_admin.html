@@ -2,6 +2,9 @@
 
 {% block content %}
 <h1 class="title">
-    Welcome, {{name}}! 
+    Welcome, {{name}} aa! <br>
+    <a href="{{ url_for('admin.addCourse') }}"><button>Add Course</button></a>
+    <a href="{{ url_for('admin.addStudent') }}"><button>Register Student</button></a>
+    <a href="{{ url_for('admin.addInstructor') }}"><button>Add Instructor</button></a>
 </h1>
 {% endblock %}

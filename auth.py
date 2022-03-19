@@ -18,9 +18,16 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login', methods=['GET', 'POST']) 
 def login(): 
     if request.method=='GET': 
-        if session.get('user'):
-            login_user(user)
-            return redirect(url_for('main.dashboard'))
+    #     if session.get('user'):
+    #         login_user(session['user'])
+    #         if current_user.role == 1:
+    #             return render_template('dashboard_admin.html', name=(current_user.first_name+' '+current_user.last_name))
+    #         elif current_user.role == 3:
+    #             return render_template('educatee.html', name=(current_user.first_name+' '+current_user.last_name))
+    #         else:
+    #             return render_template('dashboard.html', name=(current_user.first_name+' '+current_user.last_name))
+
+    #     else:
         return render_template('login.html')
     else:
         email = request.form.get('email')
@@ -44,15 +51,17 @@ def signup():
         return render_template('signup.html',roles=db.session.query(UserRoles).all())
     else: 
         email = request.form.get('email')
-        #phone_no = request.form.get('phone_no')
         password = request.form.get('password')
+        first_name  = request.form.get('first_name')
+        last_name  = request.form.get('last_name')
 
-        #address = request.form.get('address')
-        #dob_temp = request.form.get('dob')
-        #if dob_temp ==  ''
-        #    dob = None
-        #else:
-        #    dob = datetime.strptime(dob_temp,'%Y-%m-%d')
+        # phone_no = request.form.get('phone_no')
+        # address = request.form.get('address')
+        dob_temp = request.form.get('dob')
+        if dob_temp == '':
+           dob = None
+        else:
+           dob = datetime.strptime(dob_temp,'%Y-%m-%d')
 
         role = request.form.get('role')
         salt = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 20))    
@@ -61,9 +70,13 @@ def signup():
             flash('Email address already exists')
             return redirect(url_for('auth.signup'))
         
-        new_user = LoginDetails(email=email,password=generate_password_hash(password+salt, method='sha256'), salt = salt)
+        new_login = LoginDetails(email=email,password=generate_password_hash(password+salt, method='sha256'), salt = salt, role = role,\
+                                first_name = first_name, last_name = last_name )
+
+        new_user = User( dob = dob)
         
-        db.session.add(new_user)
+        new_login.user.append(new_user)
+        db.session.add(new_login)
         db.session.commit()
         flash('You are sucess fully registered! Login now')
         return redirect(url_for('auth.login'))
