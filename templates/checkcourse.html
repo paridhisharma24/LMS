@@ -2,22 +2,25 @@
 
 {% block content %}
 
-
+<h1>Courses:</h1>
 <table>
     <tr>
-        <th>Course Id</th>
+        <th>Course Name</th>
         <th>Start Date</th>
         <th>End Date</th>
 
     </tr>
 
-    {% for deets in mentor_courses %}
+    {% for deets in course_list %}        
+    <tr>
+        <td>
+            <a href= "{{ url_for ('educator.viewCourse',course_id = deets.Course.course_id) }}"> {{deets.Course.course_name}}</a>
+    
+        </td>
+        <td>{{deets.CourseInstance.start_date}}</td>
+        <td>{{deets.CourseInstance.end_date}}</td>
         
-        <tr>
-            <td>{{deets.course_id}}</td>
-            <td>{{deets.start_date}}</td>
-            <td>{{deets.end_date}}</td>
-        </tr>
+    </tr>
         
     {% endfor %}
 

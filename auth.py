@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, redirect, session, url_for, reques
 from numpy import append
 from werkzeug.security \
          import generate_password_hash, check_password_hash
-from models import User, UserRoles, LoginDetails, PhoneNo, Address
+from models import User, UserRoles, LoginDetails, PhoneNo, Address, CourseInstance, Course, CourseStudents
 from flask_login import login_user, logout_user, \
                                      login_required, current_user
 from __init__ import db
@@ -25,9 +25,12 @@ def login():
             if current_user.role == 1:
                 return render_template('dashboard_admin.html', name=(current_user.first_name+' '+current_user.last_name))
             elif current_user.role == 3:
-                return render_template('dashboard_educatee.html', name=(current_user.first_name+' '+current_user.last_name))
+                student_course = db.session.query(CourseStudents,Course).filter(CourseStudents.student_id==current_user.user_id, CourseStudents.course_id==Course.course_id ).all()
+                return render_template('dashboard_educatee.html', name=(current_user.first_name+' '+current_user.last_name), student_course = student_course)
             else:
-                return render_template('dashboard_dashboard.html', name=(current_user.first_name+' '+current_user.last_name))
+                mentor_course= db.session.query(CourseInstance,Course).filter(CourseInstance.mentor_id==current_user.user_id, CourseInstance.course_id==Course.course_id ).all()
+                return render_template('dashboard_educator.html', name=(current_user.first_name+' '+current_user.last_name), mentor_course = mentor_course)
+
 
         else:
             return render_template('login.html')

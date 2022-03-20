@@ -106,13 +106,15 @@ def addStudent():
         file = request.files['file']
         data = pd.read_excel(file).to_dict()
 
-        # return f'{data}'
+        # return f'{course_id}'
 
         for uid in data['user_id']:
             student_id = data['user_id'][uid]
-            cs_object = CourseStudents.query.filter_by(course_id=course_id, student_id = student_id)
+            cs_object = CourseStudents.query.filter_by(course_id=course_id, student_id = student_id).first()
+            print(cs_object)
             # if student is already added do nothing
             if not cs_object:
+                print('hey')
                 new_courseStudent = CourseStudents(
                     course_id = course_id,
                     student_id = student_id
@@ -142,7 +144,7 @@ def addEducator():
         if upload_date=='':
             upload_date = None
         new_courseInstance = CourseInstance(
-            course_id = course_id, mentor_id = mentor_id
+            course_id = course_id, mentor_id = mentor_id, start_date = start_date, end_date = end_date, upload_date = upload_date
         )
         db.session.add(new_courseInstance)
         db.session.commit()

@@ -66,10 +66,17 @@ def addGrades():
 
 @educator.route('/checkcourses', methods=['GET', 'POST']) 
 def checkcourses(): 
-    
-    mentor_courses = CourseInstance.query.filter(CourseInstance.mentor_id == current_user.user_id).all()
-    #course_name = Course.query.filter(Course.course_id in mentor_courses.course_id)
+    course_list= db.session.query(CourseInstance,Course).filter(CourseInstance.mentor_id==current_user.user_id ).all()
+    for r in course_list:
+        print(r.CourseInstance.instance_id,r.Course.course_name)
 
-    return render_template('checkcourse.html', mentor_courses=mentor_courses)
+    return render_template('checkcourse.html', course_list=course_list)
+
+
+@educator.route('/viewCourse', methods=['GET', 'POST']) 
+def viewCourse():
+    keys=request.args.get('course_id')
+    return f'{keys}'
+    render_template('coursepage.html')
 
 
