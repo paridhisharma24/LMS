@@ -39,13 +39,13 @@ def checkgrades():
    
 
 
-@educatee.route('/checkcourses', methods=['GET', 'POST']) 
-def checkcourses(): 
-    course_list= db.session.query(CourseStudents,Course).filter(CourseStudents.course_id==Course.course_id).all()
-    courses_text= '<ul>'
-    for course in course_list:
-        if(course.user_id==current_user.id):
-         courses_text += '<li>' + course_list.course_id+ ' -> ' + course_list.course_name +'</li>'
-    courses_text += '</ul>'
-    return courses_text
+# @educatee.route('/checkcourses', methods=['GET', 'POST']) 
+# def checkcourses(): 
+#     course_list= db.session.query(CourseStudents,Course).filter(CourseStudents.course_id==Course.course_id).all()
+#     courses_text= '<ul>'
+#     # for course in course_list:
+#     #     if(course.student_id==current_user.id):
+#     #      courses_text += '<li>' + course_list.course_id+ ' -> ' + course_list.course_name +'</li>'
+#     # courses_text += '</ul>'
+#     return courses_text
    

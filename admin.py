@@ -1,15 +1,17 @@
 from cmath import nan
+from tracemalloc import start
 import pandas as pd
 import string    
 import random 
 from datetime import datetime 
-from flask import Blueprint, flash,redirect,url_for,request,render_template
+from flask import Blueprint, Response, flash,redirect,url_for,request,render_template
 from sqlalchemy import null
 from __init__ import db
 from flask_login import current_user
+from educatee import upload
 from models import Course, CourseStudents, CourseInstance, User, LoginDetails
-from hashlib import new
-from time import strptime
+import xlsxwriter
+import io
 from werkzeug.security import generate_password_hash, check_password_hash
 
 admin = Blueprint('admin',__name__)
@@ -73,36 +75,78 @@ def addCourse():
         db.session.commit()
         return render_template('addCourse.html', name=current_user.first_name,message="New Course Registered!!!")
 
+@admin.route('/getAllStudents',methods=['GET','POST'])
+def getAllStudents():
+    #create excel sheet with all students(user_id, name, email)
+    users = LoginDetails.query.filter_by(role = 3)
+    user_ids = []
+    names = []
+    emails = []
+    for useri in users:
+        user_ids.append(useri.user_id)
+        names.append(useri.first_name + ' ' + useri.last_name)
+        emails.append(useri.email)
+    df = pd.DataFrame({'user_id':user_ids, 'Name': names,  'email': emails})
+    buffer = io.BytesIO()
+    df.to_excel(buffer, sheet_name='Sheet1', index=False)
+    headers = {
+    'Content-Disposition': 'attachment; filename=students_list.xlsx',
+    'Content-type': 'application/vnd.ms-excel'
+    }
+    return Response(buffer.getvalue(), mimetype='application/vnd.ms-excel', headers=headers)
+    
 
 @admin.route('/addStudent',methods=['GET','POST'])
 def addStudent():
     if request.method == 'GET':
-        return render_template('addStudent.html', name=current_user.first_name)
+        return render_template('addStudent.html', name=current_user.first_name, courses = db.session.query(Course).all())
     else:
-        new_courseStudent = CourseStudents(
-            course_id = request.form.get('courseId'),
-            user_id = request.form.get('studentID')
-        )
-        db.session.add(new_courseStudent)
-        db.session.commit()
+        course_id = request.form.get('courseId')
+        # student_id = request.form.get('studentId')
+        file = request.files['file']
+        data = pd.read_excel(file).to_dict()
+
+        # return f'{data}'
+
+        for uid in data['user_id']:
+            student_id = data['user_id'][uid]
+            cs_object = CourseStudents.query.filter_by(course_id=course_id, student_id = student_id)
+            # if student is already added do nothing
+            if not cs_object:
+                new_courseStudent = CourseStudents(
+                    course_id = course_id,
+                    student_id = student_id
+                )
+                db.session.add(new_courseStudent)
+                db.session.commit()
         return render_template('addStudent.html', name=current_user.first_name,
-        message="New Student added!!")
+        message="New Students added!!")
         pass
     pass
 
 
-@admin.route('/addInstructor',methods=['GET','POST'])
-def addInstructor():
+@admin.route('/addEducator',methods=['GET','POST'])
+def addEducator():
     if request.method == 'GET':
-        return render_template('addInstructor.html', name=current_user.first_name)
+        return render_template('addEducator.html', name=current_user.first_name, courses = db.session.query(Course).all(), educators = LoginDetails.query.filter_by(role=2))
     else:
-        new_courseStudent = CourseInstance(
-            course_id = request.form.get('courseId'),
-            user_id = request.form.get('studentID')
+        course_id = request.form.get('courseId')
+        mentor_id = request.form.get('educatorId')
+        start_date = request.form.get('start_date')
+        end_date = request.form.get('end_date')
+        upload_date = request.form.get('start_date')
+        if start_date=='':
+            start_date = None
+        if end_date=='':
+            end_date = None
+        if upload_date=='':
+            upload_date = None
+        new_courseInstance = CourseInstance(
+            course_id = course_id, mentor_id = mentor_id
         )
-        db.session.add(new_courseStudent)
+        db.session.add(new_courseInstance)
         db.session.commit()
-        return render_template('addInstructor.html', name=current_user.first_name,
-        message="New Instructor added!!")
+        return render_template('addEducator.html', name=current_user.first_name,
+        message="New Educator added!!")
         pass
     pass

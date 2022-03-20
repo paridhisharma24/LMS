@@ -5,3 +5,4 @@ flask-session
 werkzeug
 pandas
 openpyxl
+xlsxwriter
