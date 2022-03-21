@@ -1,10 +1,11 @@
+from time import strptime
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from sqlalchemy import null
 from models import User, MentorContent, CourseStudents, CourseInstance, Course, ContentTypes, Grade
 
 from flask_login import current_user
 from __init__ import db
-from datetime import date
+from datetime import datetime, date
 import pandas as pd
 from sqlalchemy.orm import sessionmaker
 Session = sessionmaker()
@@ -15,6 +16,7 @@ educator = Blueprint('educator', __name__)
 @educator.route('/addContent', methods=['GET', 'POST']) 
 def addContent(): 
     if request.method == 'GET':
+        course_id=request.args.get('course_id')
         courses = Course.query.filter(CourseInstance.mentor_id == current_user.user_id ).all()
         return render_template('addContent.html', 
                                 name=(current_user.first_name+' '+current_user.last_name),
@@ -22,14 +24,19 @@ def addContent():
                                 course=courses)
 
     else:
+        course_id=request.args.get('course_id')
         file = request.files['file']
-        course_id = request.form.get("course_id")
+        # course_id = request.form.get("course_id")
         due = request.form.get("due_date")
+        if due == '':
+            due_date = None
+        else:
+            due_date = datetime.strptime(due, "%Y-%m-%d")
         upload_date = date.today()
         content = MentorContent(mentor_id=current_user.user_id,
                             data=file.read(),
                             course_id=course_id,
-                            due_date=due,
+                            due_date=due_date,
                             upload_date=upload_date
                         )
         
@@ -37,7 +44,7 @@ def addContent():
         db.session.commit()
 
         flash( f'Uploaded: {file.filename}')
-        return render_template('educator.html')
+        return redirect(url_for('main.dashboard'))
 
 
 
@@ -60,7 +67,7 @@ def addGrades():
                 db.session.add(new_grade)
                 db.session.commit()
 
-        return render_template('educator.html')
+        return redirect(url_for('main.dashboard'))
 
 
 
@@ -75,8 +82,8 @@ def checkcourses():
 
 @educator.route('/viewCourse', methods=['GET', 'POST']) 
 def viewCourse():
-    keys=request.args.get('course_id')
-    return f'{keys}'
-    render_template('coursepage.html')
+    course_id=request.args.get('course_id')
+    # return f'{keys}'
+    return render_template('viewcourse_educator.html', course_name = Course.query.filter(Course.course_id == course_id).first().course_name)
 
 
