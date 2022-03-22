@@ -6,7 +6,7 @@
 
 
 <div class="upload">
-    <form method="POST" action="/addContent" enctype="multipart/form-data">
+    <form method="POST" action="{{ url_for('educator.addContent',course_id = course_id) }}" enctype="multipart/form-data">
         <input type="file" name="file">
 
         <div class="field">

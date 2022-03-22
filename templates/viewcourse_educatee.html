@@ -3,13 +3,10 @@
 {% block content %}
 
 <h1 class="title">
-    Welcome, {{name}}! (Educator)   
+    Welcome, {{name}}! (Educatee)   
 </h1>
 
 <h2>{{course_name}} Course Contents:</h2>
-
-
-<a href= "{{ url_for ('educator.addContent', course_id = course_id) }}" >Upload Content</a>
 
 
 <h3>Lectures:</h3>
@@ -36,9 +33,17 @@
     <a href="{{ url_for ('educator.viewContent', content_id = lec.content_id, filename = lec.filename) }}">&#8987;Assignment: {{lec.filename}}</a>
     <p>upload date : {{lec.upload_date}}</p>
     <p>due date : {{lec.due_date}}</p>
+
+    <div class="upload">
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <button>Submit</button>
+        </form>
+    </div>
+    
 </div>
 {%endfor%}
 
-<a href="{{ url_for('educator.addGrades', course_id = course_id) }}" >Add Grade</a>
+
 
 {% endblock %}
