@@ -3,7 +3,7 @@ from sqlalchemy import null
 from werkzeug.security \
          import generate_password_hash, check_password_hash
 from models import Course
-from models import MenteeAssignment, CourseStudents
+from models import MenteeAssignment, CourseStudents, MentorContent
 # from models import User
 from flask_login import login_user, logout_user, \
                                      login_required, current_user
@@ -39,13 +39,14 @@ def checkgrades():
    
 
 
-# @educatee.route('/checkcourses', methods=['GET', 'POST']) 
-# def checkcourses(): 
-#     course_list= db.session.query(CourseStudents,Course).filter(CourseStudents.course_id==Course.course_id).all()
-#     courses_text= '<ul>'
-#     # for course in course_list:
-#     #     if(course.student_id==current_user.id):
-#     #      courses_text += '<li>' + course_list.course_id+ ' -> ' + course_list.course_name +'</li>'
-#     # courses_text += '</ul>'
-#     return courses_text
+
+@educatee.route('/viewCourseEd', methods=['GET', 'POST']) 
+def viewCourseEd():
+    course_id=int(request.args.get('course_id'))
+    assignments = MentorContent.query.filter_by(course_id = course_id, content_id = 1 )
+    notes = MentorContent.query.filter_by(course_id = course_id, content_id = 2 )
+    lectures = MentorContent.query.filter_by(course_id = course_id, content_id = 3 )
+   
+    return render_template('viewcourse_educatee.html', course_name = Course.query.filter(Course.course_id == course_id).first().course_name, assignments = assignments,lectures = lectures, notes = notes )
+
    

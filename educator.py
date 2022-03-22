@@ -17,15 +17,13 @@ educator = Blueprint('educator', __name__)
 
 @educator.route('/addContent', methods=['GET', 'POST']) 
 def addContent(): 
+    course_id=request.args.get('course_id')
     if request.method == 'GET':
-        course_id=request.args.get('course_id')
-        # courses = Course.query.filter(CourseInstance.mentor_id == current_user.user_id ).all()
-        return render_template('addContent.html', 
+         return render_template('addContent.html', 
                                 name=(current_user.first_name+' '+current_user.last_name),
-                                content=db.session.query(ContentTypes).all())
+                                content=db.session.query(ContentTypes).all(), course_id = course_id)
 
     else:
-        course_id=request.args.get('course_id')
         file = request.files['file']
         # course_id = request.form.get("course_id")
         due = request.form.get("due_date")
@@ -41,15 +39,15 @@ def addContent():
                             course_id=course_id,
                             due_date=due_date,
                             upload_date=upload_date,
-                            type =  type
-                            # filename = filename
+                            type =  type,
+                            filename = filename
                         )
         
         db.session.add(content)
         db.session.commit()
 
         flash( f'Uploaded: {file.filename}')
-        return redirect(url_for('main.dashboard'))
+        return redirect(url_for('educator.viewCourse', course_id = course_id))
 
 
 
@@ -75,16 +73,6 @@ def addGrades():
         return redirect(url_for('main.dashboard'))
 
 
-
-@educator.route('/checkcourses', methods=['GET', 'POST']) 
-def checkcourses(): 
-    course_list= db.session.query(CourseInstance,Course).filter(CourseInstance.mentor_id==current_user.user_id ).all()
-    for r in course_list:
-        print(r.CourseInstance.instance_id,r.Course.course_name)
-
-    return render_template('checkcourse.html', course_list=course_list)
-
-
 @educator.route('/viewCourse', methods=['GET', 'POST']) 
 def viewCourse():
     course_id=int(request.args.get('course_id'))
@@ -92,7 +80,7 @@ def viewCourse():
     notes = MentorContent.query.filter_by(course_id = course_id, content_id = 2 )
     lectures = MentorContent.query.filter_by(course_id = course_id, content_id = 3 )
    
-    return render_template('viewcourse_educator.html', course_name = Course.query.filter(Course.course_id == course_id).first().course_name, assignments = assignments,lectures = lectures, notes = notes )
+    return render_template('viewcourse_educator.html',course_id = course_id, course_name = Course.query.filter(Course.course_id == course_id).first().course_name, assignments = assignments,lectures = lectures, notes = notes )
 
 
 @educator.route('/viewContent')
@@ -103,7 +91,9 @@ def viewContent():
 
 @educator.route('/viewPdf/<content_id>')
 def viewPdf(content_id = None):
-    pdf =  db.session.query(MentorContent).all()[-1].data
+    # pdf =  db.session.query(MentorContent).all()[-1].data
+    # return f'{content_id}'
+    pdf =  MentorContent.query(content_id = content_id).data
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = \
