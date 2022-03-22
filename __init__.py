@@ -38,6 +38,7 @@ def create_app():
                             #stored in the session
         # since the user_id is just the primary key of our user 
         # table, use it in the query for the user
+        print(User.query.get(int(user_id)))
         return User.query.get(int(user_id))
     # blueprint for auth routes in our app
     # blueprint allow you to orgnize your flask app
@@ -46,4 +47,12 @@ def create_app():
     # blueprint for non-auth parts of app
     from main import main as main_blueprint
     app.register_blueprint(main_blueprint)
+
+    from educatee import educatee as educatee_blueprint
+    app.register_blueprint(educatee_blueprint)
+    from posts import posts as posts_blueprint
+    app.register_blueprint(posts_blueprint)
+    from replies import replies as replies_blueprint
+    app.register_blueprint(replies_blueprint)
+    
     return app
