@@ -1,5 +1,7 @@
+import base64
+from fileinput import filename
 from time import strptime
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, make_response, render_template, redirect, url_for, request, flash
 from sqlalchemy import null
 from models import User, MentorContent, CourseStudents, CourseInstance, Course, ContentTypes, Grade
 
@@ -17,11 +19,10 @@ educator = Blueprint('educator', __name__)
 def addContent(): 
     if request.method == 'GET':
         course_id=request.args.get('course_id')
-        courses = Course.query.filter(CourseInstance.mentor_id == current_user.user_id ).all()
+        # courses = Course.query.filter(CourseInstance.mentor_id == current_user.user_id ).all()
         return render_template('addContent.html', 
                                 name=(current_user.first_name+' '+current_user.last_name),
-                                content=db.session.query(ContentTypes).all(),
-                                course=courses)
+                                content=db.session.query(ContentTypes).all())
 
     else:
         course_id=request.args.get('course_id')
@@ -33,11 +34,15 @@ def addContent():
         else:
             due_date = datetime.strptime(due, "%Y-%m-%d")
         upload_date = date.today()
+        type  = request.form.get('content_id')
+        filename = file.filename
         content = MentorContent(mentor_id=current_user.user_id,
                             data=file.read(),
                             course_id=course_id,
                             due_date=due_date,
-                            upload_date=upload_date
+                            upload_date=upload_date,
+                            type =  type
+                            # filename = filename
                         )
         
         db.session.add(content)
@@ -82,8 +87,25 @@ def checkcourses():
 
 @educator.route('/viewCourse', methods=['GET', 'POST']) 
 def viewCourse():
-    course_id=request.args.get('course_id')
-    # return f'{keys}'
-    return render_template('viewcourse_educator.html', course_name = Course.query.filter(Course.course_id == course_id).first().course_name)
+    course_id=int(request.args.get('course_id'))
+    assignments = MentorContent.query.filter_by(course_id = course_id, content_id = 1 )
+    notes = MentorContent.query.filter_by(course_id = course_id, content_id = 2 )
+    lectures = MentorContent.query.filter_by(course_id = course_id, content_id = 3 )
+   
+    return render_template('viewcourse_educator.html', course_name = Course.query.filter(Course.course_id == course_id).first().course_name, assignments = assignments,lectures = lectures, notes = notes )
 
 
+@educator.route('/viewContent')
+def viewContent():
+    content_id=request.args.get('content_id')
+    filename = request.args.get('filename')
+    return render_template('view_pdf.html', content_id = content_id, filename = filename)
+
+@educator.route('/viewPdf/<content_id>')
+def viewPdf(content_id = None):
+    pdf =  db.session.query(MentorContent).all()[-1].data
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = \
+        'inline; filename=%s.pdf' % 'yourfilename'
+    return response

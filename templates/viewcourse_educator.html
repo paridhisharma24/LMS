@@ -8,7 +8,38 @@
 
 <h2>{{course_name}} Course Contents:</h2>
 
+<h3>Lectures:</h3>
+{% for lec in lectures %}
+<div>
+    <a href="{{ url_for ('educator.viewContent', content_id = lec.content_id, filename = lec.filename) }}">&#129409;Lecture: {{lec.filename}}</a>
+    <p>upload date : {{lec.upload_date}}</p>
+</div>
 
+<!-- <embed src="/viewPdf/{{lec.content_id}}">  -->
+{%endfor%}
+
+<h3>Notes:</h3>
+{% for lec in notes %}
+<div>
+    <a href="{{ url_for ('educator.viewContent', content_id = lec.content_id, filename = lec.filename) }}">&#129409;Notes: {{lec.filename}}</a>
+    <p>upload date : {{lec.upload_date}}</p>
+</div>
+{%endfor%}
+
+<h3>Assignments:</h3>
+{% for lec in assignments %}
+<div>
+    <a href="{{ url_for ('educator.viewContent', content_id = lec.content_id, filename = lec.filename) }}">&#8987;Assignment: {{lec.filename}}</a>
+    <p>upload date : {{lec.upload_date}}</p>
+    <p>due date : {{lec.due_date}}</p>
+</div>
+{%endfor%}
+
+<script>
+//     var encoded_data = '{{ encoded_data }}';
+//     var pdf_data = atob(encoded_data);
+//   </script>
+<!-- //   <embed src="encoded_data:;base64,,{{encoded_data}}" width="800px" height="2100px" /> -->
 <a href= "{{ url_for ('educator.addContent', course_id = course_id) }}" >Add Course</a>
 
 <a href="{{ url_for('educator.addGrades', course_id = course_id) }}" >Add Grade</a>

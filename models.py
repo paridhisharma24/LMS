@@ -1,3 +1,4 @@
+from fileinput import filename
 from flask import Flask
 from __init__ import db
 from flask_login import UserMixin
@@ -210,7 +211,8 @@ class MentorContent(UserMixin,db.Model):
 
     course_id = db.Column(
         db.Integer,
-        db.ForeignKey('Course.course_id')
+        db.ForeignKey('Course.course_id'),
+        nullable = False
     )
 
     upload_date = db.Column(
@@ -225,8 +227,14 @@ class MentorContent(UserMixin,db.Model):
     
     type = db.Column(
         db.Integer,
-        db.ForeignKey('ContentTypes.content_id')
+        db.ForeignKey('ContentTypes.content_id'),
+        nullable = False
     )
+
+    # filename = db.Column(
+    #     db.String(30),
+    #     nullable = False
+    # )
 
     data = db.Column(
         db.LargeBinary,
