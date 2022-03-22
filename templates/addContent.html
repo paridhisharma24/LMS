@@ -1,26 +1,28 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <h3>Upload Content</h3>
 
-
 <div class="upload">
-    <form method="POST" action="{{ url_for('educator.addContent',course_id = course_id) }}" enctype="multipart/form-data">
-        <input type="file" name="file">
+  <form
+    method="POST"
+    action="{{ url_for('educator.addContent',course_id = course_id) }}"
+    enctype="multipart/form-data"
+  >
+    <input type="file" name="file" />
 
-        <div class="field">
-            <div class="control"> Select Type:
-                <select id="content_id" name="content_id">
-                    <option value="0" disabled selected>Select</option>
-                    {% for c in content %}
-                    <option value={{c.content_id}}>{{c.content_name}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
+    <div class="field">
+      <div class="control">
+        Select Type:
+        <select id="content_id" name="content_id">
+          <option value="0" disabled selected>Select</option>
+          {% for c in content %}
+          <option value="{{c.content_id}}">{{c.content_name}}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
 
-        <!-- <div class="field">
+    <!-- <div class="field">
             <div class="control"> Select Course:
                 <select id="course_id" name="course_id">
                     <option value="0" disabled selected>Select</option>
@@ -31,14 +33,20 @@
             </div>
         </div> -->
 
-        <div class="field">
-            <div class="control">Due Date:
-                <input class="input is-large" type="date" name="due_date" placeholder="due_date">
-            </div>
-        </div>
+    <div class="field">
+      <div class="control">
+        Due Date:
+        <input
+          class="input is-large"
+          type="date"
+          name="due_date"
+          placeholder="due_date"
+        />
+      </div>
+    </div>
 
-        <button>Submit</button>
-    </form>
+    <button>Submit</button>
+  </form>
 </div>
 
 {% endblock %}

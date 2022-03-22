@@ -1,5 +1,4 @@
-from tracemalloc import start
-from flask import session,Blueprint, render_template, flash
+from flask import session, Blueprint, render_template, flash
 from flask_login import login_required, current_user
 from datetime import timedelta
 from __init__ import create_app, db
@@ -13,7 +12,7 @@ import os
 
 
 # our main blueprint
-main = Blueprint('main', __name__)
+main = Blueprint("main", __name__)
 # @main.before_request
 # def before_request():
 #     session.permanent = True
@@ -44,26 +43,52 @@ def index():
     # content = ContentTypes(content_id=3,content_name="Lecture")
     # db.session.add(content)
     # db.session.commit()
-    
+
     return render_template("index.html")
 
+
 ####################################################################
-@main.route('/dashboard') 
+@main.route("/dashboard")
 @login_required
 def dashboard():
     print(current_user)
-    
-    if current_user.role == 1:
-        return render_template('dashboard_admin.html', name=(current_user.first_name+' '+current_user.last_name))
-    elif current_user.role == 3:
-        student_course = db.session.query(CourseStudents,Course).filter(CourseStudents.student_id==current_user.user_id, CourseStudents.course_id==Course.course_id ).all()
-        return render_template('dashboard_educatee.html', name=(current_user.first_name+' '+current_user.last_name), student_course = student_course)
-    else:
-        mentor_course= db.session.query(CourseInstance,Course).filter(CourseInstance.mentor_id==current_user.user_id, CourseInstance.course_id==Course.course_id ).all()
-        return render_template('dashboard_educator.html', name=(current_user.first_name+' '+current_user.last_name), mentor_course = mentor_course)
 
-    #return render_template('educator.html', name=current_user.first_name)
-    #return render_template('educator.html', name=(current_user.first_name+' '+current_user.last_name), r=current_user.role, content=db.session.query(ContentTypes).all())
+    if current_user.role == 1:
+        return render_template(
+            "dashboard_admin.html",
+            name=(current_user.first_name + " " + current_user.last_name),
+        )
+    elif current_user.role == 3:
+        student_course = (
+            db.session.query(CourseStudents, Course)
+            .filter(
+                CourseStudents.student_id == current_user.user_id,
+                CourseStudents.course_id == Course.course_id,
+            )
+            .all()
+        )
+        return render_template(
+            "dashboard_educatee.html",
+            name=(current_user.first_name + " " + current_user.last_name),
+            student_course=student_course,
+        )
+    else:
+        mentor_course = (
+            db.session.query(CourseInstance, Course)
+            .filter(
+                CourseInstance.mentor_id == current_user.user_id,
+                CourseInstance.course_id == Course.course_id,
+            )
+            .all()
+        )
+        return render_template(
+            "dashboard_educator.html",
+            name=(current_user.first_name + " " + current_user.last_name),
+            mentor_course=mentor_course,
+        )
+
+    # return render_template('educator.html', name=current_user.first_name)
+    # return render_template('educator.html', name=(current_user.first_name+' '+current_user.last_name), r=current_user.role, content=db.session.query(ContentTypes).all())
 
 
 app = create_app()
