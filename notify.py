@@ -27,7 +27,11 @@ class notify:
 
     sent_from = gmail_user
     subject = 'Assignment Due'
+<<<<<<< HEAD
     body = 'Hey Educatee, your Assignment is Due!!'
+=======
+    body = 'hey you little creature, your Assignment is Due!!'
+>>>>>>> 85c841dfb4ca6d1340d6d2b43f946eced8d04c5a
 
     def sendMailInternal(self, to):
         email_text = """\
@@ -93,7 +97,11 @@ class notify:
         
 
     def keepChecking(self):
+<<<<<<< HEAD
         #print("hello, keep checking is running")
+=======
+        print("hello, keep checking is running")
+>>>>>>> 85c841dfb4ca6d1340d6d2b43f946eced8d04c5a
         while True:
             Students = self.getStudentsFromDB()
             FilteredStudents = self.filterstudents(Students)
