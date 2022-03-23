@@ -1,8 +1,15 @@
+from tracemalloc import start
 from flask import session,Blueprint, render_template, flash
 from flask_login import login_required, current_user
 from datetime import timedelta
 from __init__ import create_app, db
 from models import UserRoles, ContentTypes, CourseInstance, Course, CourseStudents
+from notify import notify
+import asyncio
+import threading
+from threading import Thread
+import os
+
 
 
 # our main blueprint
@@ -12,6 +19,15 @@ main = Blueprint('main', __name__)
 #     session.permanent = True
 #     app.permanent_session_lifetime = timedelta(minutes=.5)
 #     session.modified = True
+
+def runapp(app):
+    print("heyy")
+    if __name__ == '__main__':
+        print("hey")
+        db.create_all(app=create_app())
+        app.run(debug=True) #run the flask app on debug mode
+        print("palak")
+
 
 @main.route('/') 
 def index():
@@ -51,7 +67,15 @@ def dashboard():
     #return render_template('educator.html', name=(current_user.first_name+' '+current_user.last_name), r=current_user.role, content=db.session.query(ContentTypes).all())
 
 
-app = create_app() 
-if __name__ == '__main__':
-    db.create_all(app=create_app())
-    app.run(debug=True) # run the flask app on debug mode
+app = create_app()
+
+notifyy= notify(db, app)
+# loop = asyncio.get_event_loop()
+# loop.run_in_executor(None, notifyy.keepChecking)
+print(os.environ.get("firstrun"))
+if os.environ.get("firstrun")!= "1":
+    threading.Thread(target= lambda: notifyy.keepChecking()).start()
+    os.environ["firstrun"] = "1"
+
+runapp(app)
+
