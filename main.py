@@ -21,12 +21,11 @@ main = Blueprint('main', __name__)
 #     session.modified = True
 
 def runapp(app):
-    print("heyy")
+    #print("heyy")
     if __name__ == '__main__':
-        print("hey")
         db.create_all(app=create_app())
         app.run(debug=True) #run the flask app on debug mode
-        print("palak")
+        #print("palak")
 
 
 @main.route('/') 
