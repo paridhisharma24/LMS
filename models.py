@@ -94,6 +94,7 @@ class User(UserMixin,db.Model):
     student = db.relationship('CourseStudents')
     mentor = db.relationship('CourseInstance')
     mentor_content = db.relationship('MentorContent')
+    grade = db.relationship('Grade')
 
 
 #phone numbers of users
@@ -315,43 +316,20 @@ class MenteeAssignment(db.Model):  #submission
 
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('Course.course_id')
-    )
-
-    mentor_id = db.Column(
-        db.Integer,
-        db.ForeignKey('User.user_id')
-    )
-
-    start_date = db.Column(
-        db.Date,
-        nullable=True
-    )
-
-    end_date = db.Column(
-        db.Date,
-        nullable=True
-    )
-
-    upload_date = db.Column(
-        db.Date,
-        nullable=True
+        db.ForeignKey('User.user_id'),
+        primary_key = True
     )
     
+    date_of_sub = db.Column(
+        db.Date,
+        nullable=True
+    )
+
     data = db.Column(
         db.LargeBinary,
         nullable=False
     )
-
-    filename = db.Column(
-        db.String(30),
-        nullable = False
-    )
-
-    grade = db.Column(
-        db.String(10),
-        nullable=True
-    )
+    grade = db.relationship('MenteeAssignment')
 
 
 class Grade(db.Model):  #submission
