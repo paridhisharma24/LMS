@@ -1,3 +1,4 @@
+from fileinput import filename
 from flask import Flask
 from __init__ import db
 from flask_login import UserMixin
@@ -16,7 +17,7 @@ class UserRoles(UserMixin, db.Model):
         unique=True,
         nullable=False
     )
-    login = db.relationship('User')
+    login = db.relationship('LoginDetails')
     #dictionary to map roles to id
 
 
@@ -44,18 +45,7 @@ class LoginDetails(UserMixin, db.Model):
         db.String(20),
         nullable=False
     )
-    user = db.relationship('User')
-
-
-#user specific details
-class User(UserMixin,db.Model):
-    __tablename__ = 'User'
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey('LoginDetails.user_id'),
-        primary_key=True
-    )
-
+    
     role = db.Column(
         db.Integer,
         db.ForeignKey('UserRoles.role'),
@@ -72,6 +62,28 @@ class User(UserMixin,db.Model):
         nullable=False
     )
 
+    user = db.relationship('User')
+
+
+#user specific details
+class User(UserMixin,db.Model):
+    __tablename__ = 'User'
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('LoginDetails.user_id'),
+        primary_key=True
+    )
+
+    # first_name = db.Column(
+    #     db.String(100),
+    #     nullable=False
+    # )
+
+    # last_name = db.Column(
+    #     db.String(100),
+    #     nullable=False
+    # )
+    
     dob = db.Column(
         db.Date,
         nullable=True
@@ -200,7 +212,8 @@ class MentorContent(UserMixin,db.Model):
 
     course_id = db.Column(
         db.Integer,
-        db.ForeignKey('Course.course_id')
+        db.ForeignKey('Course.course_id'),
+        nullable = False
     )
 
     upload_date = db.Column(
@@ -215,8 +228,14 @@ class MentorContent(UserMixin,db.Model):
     
     type = db.Column(
         db.Integer,
-        db.ForeignKey('ContentTypes.content_id')
+        db.ForeignKey('ContentTypes.content_id'),
+        nullable = False
     )
+
+    # filename = db.Column(
+    #     db.String(30),
+    #     nullable = False
+    # )
 
     data = db.Column(
         db.LargeBinary,

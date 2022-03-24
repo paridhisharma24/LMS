@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="title">
+    Welcome, {{name}}! (Educator)   
+</h1>
+
+<h2>Courses:</h2>
+<table>
+    <tr>
+        <th>Course Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+
+    </tr>
+
+    {% for deets in mentor_course %}
+    <tr>
+        <td>
+            <a href= "{{ url_for ('educator.viewCourse',course_id = deets.Course.course_id) }}"> {{deets.Course.course_name}}</a>
+    
+        </td>
+        <td>{{deets.CourseInstance.start_date}}</td>
+        <td>{{deets.CourseInstance.end_date}}</td>
+        
+    </tr>
+    {% endfor %}
+
+</table>
+<!-- 
+<a href= "{{ url_for ('educator.addContent') }}" >Add Course</a>
+
+<a href="{{ url_for('educator.addGrades') }}" >Add Grade</a> -->
+
+<!-- <a href="{{ url_for('educator.checkcourses') }}" >Check Courses</a> -->
+
+{% endblock %}

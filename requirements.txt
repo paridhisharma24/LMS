@@ -4,3 +4,5 @@ flask-login
 flask-session
 werkzeug
 pandas
+openpyxl
+xlsxwriter

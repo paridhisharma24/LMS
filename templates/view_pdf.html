@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="title">
+    Welcome, {{name}}! (Educator)   
+</h1>
+<h2>{{filename}}</h2>
+<embed src="/viewPdf/{{content_id}}" width="800px" height="2100px">
+{% endblock %}

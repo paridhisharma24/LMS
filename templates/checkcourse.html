@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Courses:</h1>
+<table>
+    <tr>
+        <th>Course Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+
+    </tr>
+
+    {% for deets in course_list %}        
+    <tr>
+        <td>
+            <a href= "{{ url_for ('educator.viewCourse',course_id = deets.Course.course_id) }}"> {{deets.Course.course_name}}</a>
+    
+        </td>
+        <td>{{deets.CourseInstance.start_date}}</td>
+        <td>{{deets.CourseInstance.end_date}}</td>
+        
+    </tr>
+        
+    {% endfor %}
+
+</table>
+{% endblock %}
