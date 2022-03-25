@@ -1,4 +1,4 @@
-from tracemalloc import start
+
 from flask import session,Blueprint, render_template, flash
 from flask_login import login_required, current_user
 from datetime import timedelta
@@ -21,20 +21,11 @@ main = Blueprint('main', __name__)
 #     session.modified = True
 
 def runapp(app):
-<<<<<<< HEAD
     #print("heyy")
     if __name__ == '__main__':
         db.create_all(app=create_app())
         app.run(debug=True) #run the flask app on debug mode
         #print("palak")
-=======
-    print("heyy")
-    if __name__ == '__main__':
-        print("hey")
-        db.create_all(app=create_app())
-        app.run(debug=True) #run the flask app on debug mode
-        print("palak")
->>>>>>> 85c841dfb4ca6d1340d6d2b43f946eced8d04c5a
 
 
 @main.route('/') 
