@@ -8,6 +8,8 @@ import time
 import datetime
 from datetime import date
 from dateutil import parser
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import asyncio
 
 
@@ -28,25 +30,49 @@ class notify:
     sent_from = gmail_user
     subject = 'Assignment Due'
     body = 'Hey Educatee, your Assignment is Due!!'
+    
 
-    def sendMailInternal(self, to):
-        email_text = """\
-        From: %s
-        To: %s
-        Subject: %s
-
-        %s
-        """ % (self.sent_from, ", ".join(to), self.subject, self.body)
-
+    def newsend(self, to):
+        msg = MIMEMultipart()
+        msg['From'] = 'lmsdesis22@gmail.com'
+        msg['To'] = ", ".join(to)
+        print(msg['To'])
+        msg['Subject'] = 'Assignment Due'
+        text = 'Hey Educatee, your Assignment is Due!!'
+        part1 = MIMEText(text, 'plain')
+        msg.attach(part1)
         try:
             smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
             smtp_server.ehlo()
             smtp_server.login(self.gmail_user, self.gmail_password)
-            smtp_server.sendmail(self.sent_from, to, email_text)
+            smtp_server.sendmail(self.sent_from, to, msg.as_string())
             smtp_server.close()
             print ("Email sent successfully!")
         except Exception as ex:
             print ("Something went wrong….",ex)
+
+    def newsend2(self, to, courses, namec):
+
+        for i in range(len(to)):
+            msg = MIMEMultipart()
+            msg['From'] = 'lmsdesis22@gmail.com'
+            msg['To'] = to[i]
+            #print(msg['To'])
+            msg['Subject'] = 'Your ' + namec[i] + ' Due'
+            text = 'Hey Educatee,\n\nYour Assignment (' + namec[i] + ') for ' + courses[i] + ' is Due!!\n'
+            part1 = MIMEText(text, 'plain')
+            msg.attach(part1)
+            try:
+                smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+                smtp_server.ehlo()
+                smtp_server.login(self.gmail_user, self.gmail_password)
+                smtp_server.sendmail(self.sent_from, to[i], msg.as_string())
+                smtp_server.close()
+                print ("Email sent successfully!")
+            except Exception as ex:
+                print ("Something went wrong….", ex)
+
+
 
     def row2dict(self, row):
         d = {}
@@ -58,7 +84,7 @@ class notify:
     def getStudentsFromDB(self):
         response= []
         with self.app.app_context():
-            rs= self.db.engine.execute("Select MentorContent.due_date, Course.course_name, MentorContent.content_id, LoginDetails.email From MentorContent INNER JOIN Course ON Course.course_id = MentorContent.course_id INNER JOIN Course_Students ON Course.course_id = Course_Students.course_id INNER JOIN User ON Course_Students.student_id = User.user_id INNER JOIN LoginDetails ON User.user_id = LoginDetails.user_id")
+            rs= self.db.engine.execute("Select ContentTypes.content_name, MentorContent.due_date, Course.course_name, MentorContent.content_id, LoginDetails.email From MentorContent INNER JOIN Course ON Course.course_id = MentorContent.course_id INNER JOIN Course_Students ON Course.course_id = Course_Students.course_id INNER JOIN User ON Course_Students.student_id = User.user_id INNER JOIN LoginDetails ON User.user_id = LoginDetails.user_id INNER JOIN ContentTypes ON mentorcontent.content_id= ContentTypes.content_id")
             for row in rs:
                 #print("palak")
                 data= dict(row)
@@ -85,16 +111,22 @@ class notify:
 
     def SendMail(self, Students):
         emails= []
+        courses= []
+        namec= []
         for student in Students:
             emails.append(student["email"])
             print(student)
+            courses.append(student["course_name"])
+            namec.append(student["content_name"])
         emails.append("palakag1410@gmail.com")
-        self.sendMailInternal(emails)
+        courses.append("physics")
+        namec.append("assign1")
+        self.newsend2(emails, courses, namec)
         
     
     def keepChecking(self):
         while 1:
             Students = self.getStudentsFromDB()
             FilteredStudents = self.filterstudents(Students)
-            self.SendMail(FilteredStudents)
+            self.SendMail(Students)
             time.sleep(720*2*60)

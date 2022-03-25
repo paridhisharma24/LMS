@@ -1,4 +1,4 @@
-
+from tracemalloc import start
 from flask import session,Blueprint, render_template, flash
 from flask_login import login_required, current_user
 from datetime import timedelta
@@ -71,7 +71,6 @@ app = create_app()
 notifyy= notify(db, app)
 # loop = asyncio.get_event_loop()
 # loop.run_in_executor(None, notifyy.keepChecking)
-print(os.environ.get("firstrun"))
 if os.environ.get("firstrun")!= "1":
     threading.Thread(target= lambda: notifyy.keepChecking()).start()
     os.environ["firstrun"] = "1"
