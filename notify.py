@@ -128,5 +128,5 @@ class notify:
         while 1:
             Students = self.getStudentsFromDB()
             FilteredStudents = self.filterstudents(Students)
-            self.SendMail(Students)
+            self.SendMail(FilteredStudents)
             time.sleep(720*2*60)
