@@ -13,8 +13,18 @@ from models import Course, CourseStudents, CourseInstance, User, LoginDetails
 import xlsxwriter
 import io
 from werkzeug.security import generate_password_hash, check_password_hash
+import smtplib
 
 admin = Blueprint('admin',__name__)
+
+def sendEmailsTo(li,message,subject):
+    for dest in li:
+        s = smtplib.SMTP('smtp.gmail.com', 587)
+        s.starttls()
+        s.login("acchandlename13@gmail.com","user1234@")
+        message = "Subject: "+subject+"\n"+message
+        s.sendmail("sender_email_id", dest, message)
+        s.quit()
 
 @admin.route('/signUpUser',methods=['GET','POST'])
 def signUpUser():
