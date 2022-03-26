@@ -2,6 +2,7 @@ import base64
 from fileinput import filename
 from time import strptime
 from flask import (
+    Response,
     Blueprint,
     make_response,
     render_template,
@@ -19,6 +20,8 @@ from models import (
     Course,
     ContentTypes,
     Grade,
+    LoginDetails,
+    MenteeAssignment
 )
 
 from flask_login import current_user
@@ -123,10 +126,39 @@ def viewContent():
 
 @educator.route("/viewPdf/<content_id>")
 def viewPdf(content_id=None):
-    # pdf =  db.session.query(MentorContent).all()[-1].data
-    # return f'{content_id}'
     pdf = MentorContent.query(content_id=content_id).data
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
     response.headers["Content-Disposition"] = "inline; filename=%s.pdf" % "yourfilename"
     return response
+
+
+@educator.route('/getAllStudents',methods=['GET','POST'])
+def getAllStudents():
+    #create excel sheet with all students(user_id, name, email)
+    course_id = int(request.args.get('course_id'))
+    course_name = Course.query.filter_by(course_id=course_id).course_name
+
+    assignment_id = int(request.args.get('assignment_id'))
+
+    mentees = MenteeAssignment.query.filter_by(assignment_id = assignment_id).all()
+    users = LoginDetails.query.filter_by(user_id = mentees.student_id).all()
+
+    user_ids = []
+    names = []
+    emails = []
+    courses = []
+    for useri in users:
+        user_ids.append(useri.user_id)
+        names.append(useri.first_name + ' ' + useri.last_name)
+        emails.append(useri.email)
+        courses.append(course_name)
+    df = pd.DataFrame({'course': courses, 'assignment_id': assignment_id, 'user_id':user_ids, 'Name': names,  'email': emails})
+    buffer = io.BytesIO()
+    df.to_excel(buffer, sheet_name='Sheet1', index=False)
+    headers = {
+    'Content-Disposition': 'attachment; filename=students_list.xlsx',
+    'Content-type': 'application/vnd.ms-excel'
+    }
+    return Response(buffer.getvalue(), mimetype='application/vnd.ms-excel', headers=headers)
+    
