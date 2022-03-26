@@ -34,12 +34,8 @@
     <p>upload date : {{lec.upload_date}}</p>
     <p>due date : {{lec.due_date}}</p>
 
-    <div class="upload">
-        <form method="POST" action="/upload" enctype="multipart/form-data">
-            <input type="file" name="file">
-            <button>Submit</button>
-        </form>
-    </div>
+    <a href="{{ url_for ('educatee.upload', assignment_id = lec.content_id, filename = lec.filename) }}"><button>upload assignment</button></a>
+    
     
 </div>
 {%endfor%}

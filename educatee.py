@@ -3,6 +3,7 @@ from sqlalchemy import null
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import Course
 from models import MenteeAssignment, CourseStudents, MentorContent
+from datetime import datetime, date
 
 # from models import User
 from flask_login import login_user, logout_user, login_required, current_user
@@ -14,21 +15,32 @@ educatee = Blueprint("educatee", __name__)
 
 @educatee.route("/upload", methods=["GET", "POST"])
 def upload():
-    if request.method == "POST":
+    #assignment = int(request.args.get("assignment_id"))
+    
+    if request.method == "GET":
+        return render_template("uploadAssignment.html")
+
+    elif request.method == "POST":
         file = request.files["file"]
+        
+        upload = MenteeAssignment(assignment_id = 1, 
+                                filename=current_user.first_name + "_assignment", 
+                                user_id = current_user.user_id, 
+                                data=file.read(),
+                                upload_date = date.today()
+                                )
 
-        # upload = MenteeAssignment(filename=file.filename, data=file.read())
-        # db.session.add(upload)
-        # db.session.commit()
+        db.session.add(upload)
+        db.session.commit()
 
-        return f"Uploaded: {file.filename}"
-    return redirect(url_for("main.dashboard"))
+        flash( f"Uploaded: {file.filename}")
+        return redirect(url_for("main.dashboard"))
 
 
 @educatee.route("/checkgrades", methods=["GET", "POST"])
 def checkgrades():
     grades = CourseStudents.query.filter(
-        CourseStudents.user_id == current_user.id
+        CourseStudents.user_id == current_user.user_id
     ).all()  # need to create grades database (roll no, couse name, couse grade)
     grade_text = "<ul>"
     for grade in grades:
