@@ -61,29 +61,14 @@ class LoginDetails(UserMixin, db.Model):
         db.String(100),
         nullable=False
     )
-
-    user = db.relationship('User')
-
-
-#user specific details
-class User(UserMixin,db.Model):
-    __tablename__ = 'User'
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey('LoginDetails.user_id'),
-        primary_key=True
-    )
-    
     dob = db.Column(
         db.Date,
         nullable=True
     )
-
     phone_no = db.relationship('PhoneNo')
     address = db.relationship('Address')
     student = db.relationship('CourseStudents')
     mentor = db.relationship('CourseInstance')
-    #mentor_content = db.relationship('MentorContent')
 
 
 #phone numbers of users
@@ -91,7 +76,7 @@ class PhoneNo(UserMixin, db.Model):
     __tablename__ = 'PhoneNo'
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('User.user_id'),
+        db.ForeignKey('LoginDetails.user_id'),
         primary_key=True
     )
     phone = db.Column(
@@ -107,7 +92,7 @@ class Address(UserMixin, db.Model):
 
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('User.user_id'),
+        db.ForeignKey('LoginDetails.user_id'),
         primary_key=True
     )
 
@@ -123,12 +108,12 @@ class Address(UserMixin, db.Model):
 
     locality = db.Column(
         db.String(50),
-        nullable=False
+        nullable=True
     )
 
     city = db.Column(
         db.String(50),
-        nullable=False
+        nullable=True
     )
 
     state = db.Column(
@@ -229,7 +214,7 @@ class MentorContent(UserMixin,db.Model):
 
 #student and course mapping
 class CourseStudents(UserMixin,db.Model):
-    __tablename__ = 'Course_Students'
+    __tablename__ = 'CourseStudents'
 
     course_id = db.Column(
         db.Integer,
@@ -239,7 +224,7 @@ class CourseStudents(UserMixin,db.Model):
 
     student_id = db.Column(
         db.Integer,
-        db.ForeignKey('User.user_id'),
+        db.ForeignKey('LoginDetails.user_id'),
         primary_key = True
     )
 
@@ -269,7 +254,7 @@ class CourseInstance(db.Model):
 
     mentor_id = db.Column(
         db.Integer,
-        db.ForeignKey('User.user_id')
+        db.ForeignKey('LoginDetails.user_id')
     )
 
     start_date = db.Column(
@@ -304,7 +289,7 @@ class MenteeAssignment(db.Model):  #submission
 
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('Course_Students.student_id')
+        db.ForeignKey('CourseStudents.student_id')
     )
 
     upload_date = db.Column(
@@ -336,7 +321,7 @@ class Grade(db.Model):  #submission
 
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('Course_Students.student_id'),
+        db.ForeignKey('CourseStudents.student_id'),
         primary_key = True
     )
 

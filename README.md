@@ -63,9 +63,9 @@ pip install -r requirements.txt
 3. In the function *_get_id_ of _mixins.py_*, update return statement:
 ```
 from:
-    return self.id
+    return text_type(self.id)
 to:
-    return self.user_id
+    return text_type(self.user_id)
 ```
 
 
