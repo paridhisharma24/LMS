@@ -11,13 +11,13 @@ from flask import (
     redirect,
     url_for,
     request,
-    render_template,
+    render_template
 )
 from sqlalchemy import null
 from __init__ import db
 from flask_login import current_user
 from educatee import upload
-from models import Course, CourseStudents, CourseInstance, User, LoginDetails
+from models import Course, CourseStudents, CourseInstance, LoginDetails, PhoneNo
 import xlsxwriter
 import io
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -38,6 +38,7 @@ def signUpUser():
             password = data["password"][i]
             first_name = data["First Name"][i]
             last_name = data["Last Name"][i]
+            phone = data["Phone No"][i]
             # from a timestamp obeject to string(only the date part)
             dob_temp = str(data["dob"][i]).split()[0]
             if dob_temp == "nan":
@@ -61,13 +62,12 @@ def signUpUser():
                     role=role,
                     first_name=first_name,
                     last_name=last_name,
+                    dob=dob
                 )
-                new_user = User(dob=dob)
-                # phone_no = PhoneNo( phone = request.form.get('phone_no'))
-                # address = request.form.get('address')
-                new_login.user.append(new_user)
-                # new_user.phone_no.append(phone_no)
+                phoneno = PhoneNo(phone=phone)
                 print(new_login)
+
+                new_login.phone_no.append(phoneno)
                 db.session.add(new_login)
                 db.session.commit()
         # flash('New Users added!!')
@@ -126,7 +126,7 @@ def addStudent():
         return render_template(
             "addStudent.html",
             name=current_user.first_name,
-            courses=db.session.query(Course).all(),
+            courses=db.session.query(Course).all()
         )
     else:
         course_id = request.form.get("courseId")
@@ -154,6 +154,7 @@ def addStudent():
             "addStudent.html",
             name=current_user.first_name,
             message="New Students added!!",
+            courses=db.session.query(Course).all()
         )
         pass
     pass
@@ -166,14 +167,21 @@ def addEducator():
             "addEducator.html",
             name=current_user.first_name,
             courses=db.session.query(Course).all(),
-            educators=LoginDetails.query.filter_by(role=2),
+            educators=LoginDetails.query.filter_by(role=2)
         )
     else:
         course_id = request.form.get("courseId")
         mentor_id = request.form.get("educatorId")
+
         start_date = request.form.get("start_date")
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+
         end_date = request.form.get("end_date")
-        upload_date = request.form.get("start_date")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+
+        upload_date = request.form.get("upload_date")
+        upload_date = datetime.strptime(upload_date, "%Y-%m-%d")
+
         if start_date == "":
             start_date = None
         if end_date == "":
@@ -191,8 +199,9 @@ def addEducator():
         db.session.commit()
         return render_template(
             "addEducator.html",
-            name=current_user.first_name,
-            message="New Educator added!!",
+            name=current_user.first_name, message="Educator Added",
+            courses=db.session.query(Course).all(),
+            educators=LoginDetails.query.filter_by(role=2)
         )
         pass
     pass

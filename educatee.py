@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from sqlalchemy import null
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import Course
-from models import MenteeAssignment, CourseStudents, MentorContent
+from models import MenteeAssignment, CourseStudents, MentorContent, Course
 from datetime import datetime, date
 
 # from models import User
@@ -40,13 +40,13 @@ def upload():
 @educatee.route("/checkgrades", methods=["GET", "POST"])
 def checkgrades():
     grades = CourseStudents.query.filter(
-        CourseStudents.user_id == current_user.user_id
-    ).all()  # need to create grades database (roll no, couse name, couse grade)
+        CourseStudents.student_id == current_user.user_id).all()
     grade_text = "<ul>"
     for grade in grades:
-        if grade.course_grade == null:
+        if grade.grade == null:
             return "Grades are not given"
-        grade_text += "<li>" + grade.course_name + " -> " + grade.course_grade + "</li>"
+        else:
+            grade_text += "<li>" + grade.course_id + " -> " + grade.grade + "</li>"
     if grade_text == "<ul>":
         return "Grades are not given"
     grade_text += "</ul>"

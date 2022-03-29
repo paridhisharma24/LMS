@@ -13,7 +13,6 @@ from flask import (
 )
 from sqlalchemy import null
 from models import (
-    User,
     MentorContent,
     CourseStudents,
     CourseInstance,
@@ -57,7 +56,6 @@ def addContent():
             due_date = datetime.strptime(due, "%Y-%m-%d")
         upload_date = date.today()
         type = request.form.get("content_id")
-        filename = file.filename
         content = MentorContent(
             mentor_id=current_user.user_id,
             data=file.read(),
@@ -65,7 +63,6 @@ def addContent():
             due_date=due_date,
             upload_date=upload_date,
             type=type,
-            filename=filename,
         )
 
         db.session.add(content)

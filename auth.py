@@ -4,7 +4,6 @@ from flask import Blueprint, render_template, redirect, session, url_for, reques
 from numpy import append
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import (
-    User,
     UserRoles,
     LoginDetails,
     PhoneNo,
@@ -111,14 +110,32 @@ def signup():
             role=role,
             first_name=first_name,
             last_name=last_name,
+            dob=dob
         )
+        house = request.form.get("house")
+        street = request.form.get("street")
+        locality = request.form.get("locality")
+        city = request.form.get("city")
+        state = request.form.get("state")
+        pincode = request.form.get("pincode")
+        country = request.form.get("country")
+    
+        address = Address(
+                        house_no = house,
+                        street = street,
+                        locality = locality,
+                        city = city,
+                        state = state,
+                        pincode = pincode,
+                        country = country
+                        )
 
-        new_user = User(dob=dob)
         phone_no = PhoneNo(phone=request.form.get("phone_no"))
         # address = request.form.get('address')
 
-        new_login.user.append(new_user)
-        new_user.phone_no.append(phone_no)
+        new_login.address.append(address)
+        new_login.phone_no.append(phone_no)
+
         db.session.add(new_login)
         db.session.commit()
         flash("You are sucess fully registered! Login now")
