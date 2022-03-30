@@ -139,14 +139,14 @@ def addStudent():
         for uid in data["user_id"]:
             student_id = data["user_id"][uid]
             cs_object = CourseStudents.query.filter_by(
-                course_id=course_id, student_id=student_id
+                course_id=course_id,user_id=student_id
             ).first()
             print(cs_object)
             # if student is already added do nothing
             if not cs_object:
                 print("hey")
                 new_courseStudent = CourseStudents(
-                    course_id=course_id, student_id=student_id
+                    course_id=course_id, user_id=student_id
                 )
                 db.session.add(new_courseStudent)
                 db.session.commit()
@@ -188,9 +188,10 @@ def addEducator():
             end_date = None
         if upload_date == "":
             upload_date = None
+
         new_courseInstance = CourseInstance(
             course_id=course_id,
-            mentor_id=mentor_id,
+            user_id=mentor_id,
             start_date=start_date,
             end_date=end_date,
             upload_date=upload_date,
