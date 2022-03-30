@@ -3,7 +3,7 @@
 {% block content %}
 
 <h1>Add Grades</h1>
-<a href="{{ url_for('educator.getAllStudents') }}"><button>Get Students List</button></a>
+<a href="{{ url_for('educator.getAllStudents', content_id=content_id, course_id=course_id) }}"><button>Get Students List</button></a>
 <div class="upload">
     <form method="POST" action="/addGrades" enctype="multipart/form-data">
         <input type="file" name="file">

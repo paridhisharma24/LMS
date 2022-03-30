@@ -29,41 +29,9 @@ def runapp(app):
 
 @main.route('/') 
 def index():
-
-    """new_role = UserRoles(role=1,role_name="Adminstration")
-    db.session.add(new_role)
-    new_role = UserRoles(role=2,role_name="Educator")
-    db.session.add(new_role)
-    new_role = UserRoles(role=3,role_name="Educatee")
-    db.session.add(new_role)
-    db.session.commit()
-
-    content = ContentTypes(content_id=1, content_name="Assignment")
-    db.session.add(content)
-    content = ContentTypes(content_id=2,content_name="Notes")
-    db.session.add(content)
-    content = ContentTypes(content_id=3,content_name="Lecture")
-    db.session.add(content)
-    db.session.commit()
-
-    new_role = Course(course_id=1,course_name="DataBase Management Systems")
-    db.session.add(new_role)
-    new_role = Course(course_id=2,course_name="Operating Systems")
-    db.session.add(new_role)
-    new_role = Course(course_id=3,course_name="Data Structures and Algorithms")
-    db.session.add(new_role)
-    new_role = Course(course_id=4,course_name="Object Oriented Programming")
-    db.session.add(new_role)
-    new_role = Course(course_id=5,course_name="Compiler Design")
-    db.session.add(new_role)
-    db.session.commit()"""
-
-    
-
     return render_template("index.html")
 
 
-####################################################################
 @main.route("/dashboard")
 @login_required
 def dashboard():
@@ -78,7 +46,7 @@ def dashboard():
         student_course = (
             db.session.query(CourseStudents, Course)
             .filter(
-                CourseStudents.student_id == current_user.user_id,
+                CourseStudents.user_id == current_user.user_id,
                 CourseStudents.course_id == Course.course_id
             )
             .all()
@@ -92,7 +60,7 @@ def dashboard():
         mentor_course = (
             db.session.query(CourseInstance, Course)
             .filter(
-                CourseInstance.mentor_id == current_user.user_id,
+                CourseInstance.user_id == current_user.user_id,
                 CourseInstance.course_id == Course.course_id
             )
             .all()
@@ -103,8 +71,6 @@ def dashboard():
             mentor_course=mentor_course
         )
 
-    # return render_template('educator.html', name=current_user.first_name)
-    # return render_template('educator.html', name=(current_user.first_name+' '+current_user.last_name), r=current_user.role, content=db.session.query(ContentTypes).all())
 
 
 app = create_app()

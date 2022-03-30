@@ -34,7 +34,7 @@
     <p>upload date : {{lec.upload_date}}</p>
     <p>due date : {{lec.due_date}}</p>
 
-    <a href="{{ url_for ('educatee.upload', assignment_id = lec.content_id, filename = lec.filename) }}"><button>upload assignment</button></a>
+    <a href="{{ url_for ('educatee.upload', assignment_id = lec.content_id) }}"><button>upload assignment</button></a>
     
     
 </div>

@@ -1,3 +1,4 @@
+from fileinput import filename
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from sqlalchemy import null
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -22,12 +23,12 @@ def upload():
 
     elif request.method == "POST":
         file = request.files["file"]
-        
-        upload = MenteeAssignment(assignment_id = 1, 
-                                filename=current_user.first_name + "_assignment", 
+        assignment_id = int(request.args.get("assignment_id"))
+        upload = MenteeAssignment(filename=current_user.first_name + "_assignment", 
                                 user_id = current_user.user_id, 
                                 data=file.read(),
-                                upload_date = date.today()
+                                upload_date = date.today(),
+                                content_id=assignment_id
                                 )
 
         db.session.add(upload)
@@ -40,7 +41,7 @@ def upload():
 @educatee.route("/checkgrades", methods=["GET", "POST"])
 def checkgrades():
     grades = CourseStudents.query.filter(
-        CourseStudents.student_id == current_user.user_id).all()
+        CourseStudents.user_id == current_user.user_id).all()
     grade_text = "<ul>"
     for grade in grades:
         if grade.grade == null:
@@ -56,9 +57,10 @@ def checkgrades():
 @educatee.route("/viewCourseEd", methods=["GET", "POST"])
 def viewCourseEd():
     course_id = int(request.args.get("course_id"))
-    assignments = MentorContent.query.filter_by(course_id=course_id, content_id=1)
-    notes = MentorContent.query.filter_by(course_id=course_id, content_id=2)
-    lectures = MentorContent.query.filter_by(course_id=course_id, content_id=3)
+
+    assignments = MentorContent.query.filter_by(course_id=course_id, type=1)
+    notes = MentorContent.query.filter_by(course_id=course_id, type=2)
+    lectures = MentorContent.query.filter_by(course_id=course_id, type=3)
 
     return render_template(
         "viewcourse_educatee.html",
