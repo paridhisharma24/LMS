@@ -2,6 +2,7 @@ from fileinput import filename
 from flask import Flask
 from __init__ import db
 from flask_login import UserMixin
+from datetime import datetime
 
 #available user roles: Admin, Mentor, Mentee 
 class UserRoles(UserMixin, db.Model):
@@ -68,6 +69,9 @@ class LoginDetails(UserMixin, db.Model):
     address = db.relationship('Address')
     #student = db.relationship('CourseStudents')
     #mentor = db.relationship('CourseInstance')
+    posts = db.relationship('Post', backref = 'author', lazy = True)
+    replies = db.relationship('Reply', backref = 'user', lazy = True)
+    
 
 
 #phone numbers of users
@@ -340,4 +344,25 @@ class Grade(db.Model):  #submission
         db.Integer,
         nullable=False
     )
+class Post(db.Model):
+	id = db.Column(db.Integer, primary_key = True)
+	title = db.Column(db.String(100), nullable = False)
+	date_posted = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+	content = db.Column(db.Text, nullable = False)
+	user_id = db.Column(db.Integer, db.ForeignKey('LoginDetails.user_id'), nullable = False)
+	replies = db.relationship('Reply', backref = 'post', lazy = True)
+	course_id=db.Column(db.Integer, db.ForeignKey('Course.course_id'), nullable = False)
+	def __repr__(self):
+		return f"Post('{self.title}', '{self.date_posted}')"
+    
+
+
+class Reply(db.Model):
+	id = db.Column(db.Integer, primary_key = True)
+	date_posted = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+	content = db.Column(db.Text, nullable = False)
+	user_id = db.Column(db.Integer, db.ForeignKey('LoginDetails.user_id'), nullable = False)
+	post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable = False)
+	def __repr__(self):
+         return f"Reply('{self.content}')"
     

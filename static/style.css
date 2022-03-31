@@ -1,4 +1,4 @@
-.navbar {
+/* .navbar {
     background-color: lightslategray;
     font-size: 1em;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -21,7 +21,42 @@
     margin-left: 30px;
 }
 
-.body-content {
-    padding: 5px;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+.buttonclass{
+   
+        height: 40px;
+        width: 100px;
+        background:#2083da; 
+        margin: 20px;
+        float: left;
+        box-shadow: 0 0 1px #ccc;
+       
+        color: white;
+        border: 0px;
+        color: #fff;
+        padding: 5px 10px 5px 10px;
+
+  border-radius: 10px;
+
+    
 }
+.buttonclass:hover{
+   
+    cursor: pointer;
+}
+.aclass {
+    text-decoration: none;
+    color: white;
+    font-size:1em;
+} */
+.body-content {
+    padding: 15px;
+    /* font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+ font-family: 'Roboto', sans-serif; 
+
+}
+.input{
+    padding: 2px;
+    margin: 5px;
+}
+

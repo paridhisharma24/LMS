@@ -1,18 +1,18 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <h1 class="title">
-    Welcome, {{name}} (Admin)! <br>
-    <a href="{{ url_for('admin.addCourse') }}"><button>Add Course</button></a>
-    <a href="{{ url_for('admin.addStudent') }}"><button>Register Student</button></a>
-    <a href="{{ url_for('admin.addEducator') }}"><button>Add Educator</button></a>
+  Welcome, {{name}} (Admin)! <br />
+  <a href="{{ url_for('admin.addCourse') }}"><button>Add Course</button></a>
+  <a href="{{ url_for('admin.addStudent') }}"
+    ><button>Register Student</button></a
+  >
+  <a href="{{ url_for('admin.addEducator') }}"><button>Add Educator</button></a>
 </h1>
 
 <div class="signUpUser">
-    <form method="POST" action="/signUpUser" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <button>Add new users</button>
-    </form>
+  <form method="POST" action="/signUpUser" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <button>Add new users</button>
+  </form>
 </div>
 
 {% endblock %}

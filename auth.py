@@ -37,7 +37,7 @@ def login():
                 student_course = (
                     db.session.query(CourseStudents, Course)
                     .filter(
-                        CourseStudents.student_id == current_user.user_id,
+                        CourseStudents.user_id == current_user.user_id,
                         CourseStudents.course_id == Course.course_id,
                     )
                     .all()

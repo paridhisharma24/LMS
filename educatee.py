@@ -68,6 +68,7 @@ def viewCourseEd():
         .first()
         .course_name,
         assignments=assignments,
+        course_id=course_id,
         lectures=lectures,
         notes=notes,
     )

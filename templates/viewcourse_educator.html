@@ -9,7 +9,7 @@
 <h2>{{course_name}} Course Contents:</h2>
 
 
-<a href= "{{ url_for ('educator.addContent', course_id = course_id) }}" >Upload Content</a>
+<a type="button" class="btn btn-primary"  href= "{{ url_for ('educator.addContent', course_id = course_id) }}" >Upload Content</a>
 
 
 <h3>Lectures:</h3>
@@ -40,6 +40,7 @@
 
 </div>
 {%endfor%}
+<a type="button" class="btn btn-primary" href="{{url_for('posts.Dforum',course_id=course_id)}}">forum</a></button>
 
 
 {% endblock %}
