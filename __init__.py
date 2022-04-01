@@ -18,10 +18,10 @@ def create_app():
     Session(app)
     
     
-    try:
-        create_engine(app.config['SQLALCHEMY_DATABASE_URI']).connect()
-    except OperationalError:
-        db.create_all()
+    # try:
+    #     create_engine(app.config['SQLALCHEMY_DATABASE_URI']).connect()
+    # except OperationalError:
+    #     db.create_all()
 
     db.init_app(app)
     login_manager = LoginManager()
