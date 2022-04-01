@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="title">
+    Welcome, {{name}}! (Educatee)   
+</h1>
+
+<h2>{{course_name}} Course Contents:</h2>
+
+
+<h3>Lectures:</h3>
+{% for lec in lectures %}
+<div>
+    <a href="{{ url_for ('educator.viewContent', content_id = lec.content_id, filename = lec.filename) }}">&#129409;Lecture: {{lec.filename}}</a>
+    <p>upload date : {{lec.upload_date}}</p>
+</div>
+
+<!-- <embed src="/viewPdf/{{lec.content_id}}">  -->
+{%endfor%}
+
+<h3>Notes:</h3>
+{% for lec in notes %}
+<div>
+    <a href="{{ url_for ('educator.viewContent', content_id = lec.content_id, filename = lec.filename) }}">&#129409;Notes: {{lec.filename}}</a>
+    <p>upload date : {{lec.upload_date}}</p>
+</div>
+{%endfor%}
+
+<h3>Assignments:</h3>
+{% for lec in assignments %}
+<div>
+    <a href="{{ url_for ('educator.viewContent', content_id = lec.content_id, filename = lec.filename) }}">&#8987;Assignment: {{lec.filename}}</a>
+    <p>upload date : {{lec.upload_date}}</p>
+    <p>due date : {{lec.due_date}}</p>
+
+    <a href="{{ url_for ('educatee.upload', assignment_id = lec.content_id) }}"><button>upload assignment</button></a>
+    
+    
+</div>
+{%endfor%}
+
+
+
+{% endblock %}
