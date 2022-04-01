@@ -84,7 +84,7 @@ class notify:
     def getStudentsFromDB(self):
         response= []
         with self.app.app_context():
-            rs= self.db.engine.execute("Select ContentTypes.content_name, MentorContent.due_date, Course.course_name, MentorContent.content_id, LoginDetails.email From MentorContent INNER JOIN Course ON Course.course_id = MentorContent.course_id INNER JOIN CourseStudents ON Course.course_id = CourseStudents.course_id INNER JOIN LoginDetails ON CourseStudents.user_id = LoginDetails.user_id INNER JOIN ContentTypes ON mentorcontent.type= ContentTypes.type")
+            rs= self.db.engine.execute("Select ContentTypes.content_name, MentorContent.due_date, Course.course_name, MentorContent.content_id, LoginDetails.email From MentorContent INNER JOIN Course ON Course.course_id = MentorContent.course_id INNER JOIN CourseStudents ON Course.course_id = CourseStudents.course_id INNER JOIN LoginDetails ON CourseStudents.user_id = LoginDetails.user_id INNER JOIN ContentTypes ON MentorContent.type= ContentTypes.type")
             for row in rs:
                 #print("palak")
                 data= dict(row)
