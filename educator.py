@@ -140,9 +140,8 @@ def getAllStudents():
 
     assignment_id = int(request.args.get('content_id'))
 
-    mentees = db.session.query(MenteeAssignment).filter(MenteeAssignment.assignment_id == assignment_id).all()
-    users = CourseStudents.join(mentees, CourseStudents.student_id == mentees.user_id)
-    users = users.join(LoginDetails, LoginDetails.user_id == users.student_id)
+    course_students = db.session.query(CourseStudents).filter(CourseStudents.course_id == course_id)
+    users = db.session.query(LoginDetails, course_students).filter(LoginDetails.user_id == course_students.user_id).all()
 
     user_ids = []
     names = []
@@ -150,7 +149,7 @@ def getAllStudents():
     upload = []
 
     for useri in users:
-        user_ids.append(useri.student_id)
+        user_ids.append(useri.user_id)
         names.append(useri.first_name + ' ' + useri.last_name)
         emails.append(useri.email)
         upload.append(useri.upload_id)
