@@ -1,2 +1,7 @@
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
 __pycache__
 .venv
