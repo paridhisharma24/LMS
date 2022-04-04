@@ -3,10 +3,10 @@
 {% block content %}
 <h1 class="title">
     Welcome, {{name}}! <br>
-    <a href="{{ url_for('admin.addCourse') }}"><button>Add Course</button></a>
-    <a href="{{ url_for('admin.addStudent') }}"><button>Register Student</button></a>
-    <a href="{{ url_for('admin.addEducator') }}"><button>Add Educator</button></a>
-    <a href="{{ url_for('admin.getAllStudents') }}"><button>Get Students List</button></a>
+    <a href="{{ url_for('admin.addCourse') }}"><button type="button" class="btn btn-outline-primary">Add Course</button></a>
+    <a href="{{ url_for('admin.addStudent') }}"><button class="btn btn-outline-primary">Register Student</button></a>
+    <a href="{{ url_for('admin.addEducator') }}"><button class="btn btn-outline-primary">Add Educator</button></a>
+    <a href="{{ url_for('admin.getAllStudents') }}"><button class="btn btn-outline-primary">Get Students List</button></a>
 </h1>
 <h1 class="title">Add Student to a Course</h1>
 <form method="POST" action="/addStudent" enctype="multipart/form-data">
@@ -23,11 +23,11 @@
     </div>
     <br><br>
     Upload file containing student list:
-    <input type="file" name="file" >
+    <input class="btn btn-primary" type="file" name="file" >
 
     <!-- <input type="text" name="studentId" placeholder="Enter Student ID"> -->
     <br><br>
-    <input type="submit" value="Add Student">
+    <input class="btn btn-primary" type="submit" value="Add Student">
 </form>
 {{message}}
 {% endblock %}

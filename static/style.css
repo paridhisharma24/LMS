@@ -59,4 +59,33 @@
     padding: 2px;
     margin: 5px;
 }
+body{
+    padding-top:70px ;
+}
+.navbar-brand{
+    color: white;
+}
+.nav-item{
+    color: white;
+}
+.nav-link{
+   color: white;
+}
+.buttonclass{
+   
+    height: 40px;
+    width: 100px;
+    background:#2083da; 
+    margin: 20px;
+    float: left;
+    box-shadow: 0 0 1px #ccc;
+   
+    color: white;
+    border: 0px;
+    color: #fff;
+    padding: 5px 10px 5px 10px;
 
+border-radius: 10px;
+
+
+}

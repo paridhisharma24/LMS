@@ -42,12 +42,13 @@ def upload():
 def checkgrades():
     grades = CourseStudents.query.filter(
         CourseStudents.user_id == current_user.user_id).all()
+    print(grades)
     grade_text = "<ul>"
     for grade in grades:
-        if grade.grade == null:
+        if grade.grade == None:
             return "Grades are not given"
         else:
-            grade_text += "<li>" + grade.course_id + " -> " + grade.grade + "</li>"
+            grade_text += "<li>" + str(grade.course_id) + " -> " + grade.grade + "</li>"
     if grade_text == "<ul>":
         return "Grades are not given"
     grade_text += "</ul>"

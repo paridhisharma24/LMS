@@ -14,26 +14,25 @@
     </head>
 
     <body>
-        <div class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #e3f2fd;">
-            <a class="navbar-brand" href="{{ url_for('main.index') }}" class="navbar-item">
+        <div class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: lightslategray;">
+            <a class="navbar-brand" style="color: white;" href="{{ url_for('main.index') }}" >
                 Home
             </a>
             <ul class="navbar-nav mr-auto nav-pills">
-            <a class="navbar-brand" href="{{ url_for('main.dashboard') }}" class="navbar-item">
+            <a class="navbar-brand" style="color:white" href="{{ url_for('main.dashboard') }}">
                 Dashboard</a>
             </ul>
-            <a class="navbar-brand" href="{{ url_for('auth.login') }}" class="navbar-item">
+            <a class="navbar-brand" style="color: white;" href="{{ url_for('auth.login') }}">
                 Login
             </a>
-            <a class="navbar-brand" href="{{ url_for('auth.signup') }}" class="navbar-item">
+            <a class="navbar-brand" style="color: white;" href="{{ url_for('auth.signup') }}">
                 Sign Up
             </a>
-            <a class="navbar-brand" href="{{ url_for('auth.logout') }}" class="navbar-item">
+            <a class="navbar-brand" style="color: white;" href="{{ url_for('auth.logout') }}">
                 Logout
             </a>
         </div>
-        <div>supportive div for css .........................................................................................................................</div>
-        <div>supportive div for css .........................................................................................................................</div>
+        
         
         <div class="col-md-11 pt-4 body-content" >
             {% block content %}

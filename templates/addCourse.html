@@ -3,14 +3,14 @@
 {% block content %}
 <h1 class="title">
     Welcome, {{name}}! <br>
-    <a href="{{ url_for('admin.addCourse') }}"><button>Add Course</button></a>
-    <a href="{{ url_for('admin.addStudent') }}"><button>Register Student</button></a>
-    <a href="{{ url_for('admin.addEducator') }}"><button>Add Educator</button></a>
+    <a href="{{ url_for('admin.addCourse') }}"><button class="btn btn-outline-primary">Add Course</button></a>
+    <a href="{{ url_for('admin.addStudent') }}"><button class="btn btn-outline-primary">Register Student</button></a>
+    <a href="{{ url_for('admin.addEducator') }}"><button class="btn btn-outline-primary">Add Educator</button></a>
 </h1>
 <h1 class="title">Add a Course</h1>
 <form method="POST">
     <input type="text" name="courseName" placeholder="Enter Course Name"><br><br>
-    <input type="submit" value="Add Course">
+    <input class="btn btn-primary"type="submit" value="Add Course">
 </form>
 <br>
 {{message}}

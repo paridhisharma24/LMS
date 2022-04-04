@@ -87,7 +87,22 @@ def delete_post(post_id):
     db.session.commit()
     return redirect(url_for('posts.my_posts',course_id=course_id))
 	
-	
+@posts.route("/search", methods = ['GET','POST'])
+def search():
+    course_id=request.args.get('course_id')
+    print("search")
+    print(course_id)
+    tag = request.form.get("Search")
+    search = "%{}%".format(tag)
+    page = request.args.get('page', 1, type=int)
+    postss= Post.query.filter_by(course_id=course_id).filter(Post.title.like(search))\
+		.order_by(Post.date_posted.desc())\
+		.paginate(page=page, per_page=3)
+    form = ReplyForm()
+    replies = Reply.query.all()
+    return render_template('posts.html', title = 'Home',course_id=course_id,
+	posts = postss, form = form, replies = replies, page = page)
+    
 	
 	
 	
