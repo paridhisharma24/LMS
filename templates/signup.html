@@ -1,77 +1,84 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="column is-4 is-offset-4">
-    <h3 class="title">Sign Up</h3>
-    <div class="box">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="notification is-danger">
-                    {{ messages[0] }}<br> Go to <a href="{{ url_for('auth.login') }}">login page</a>.
-                </div>
-            {% endif %}
-        {% endwith %}
+<div class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #2083da" >
+            <a class="navbar-brand" style="color: white;" href="{{ url_for('main.index') }}" >
+                Home
+            </a>
+            <ul class="navbar-nav mr-auto nav-pills">
+                <a class="navbar-brand" style="color:white; font-weight:600;" href="{{ url_for('main.dashboard') }}">
+                    Dashboard</a>
+            </ul>
+                <a class="navbar-brand" style="color:white; font-weight:600;" href="{{ url_for('auth.login') }}">
+                    Login
+                </a>
+                <a class="navbar-brand" style="color:white; font-weight:600;" href="{{ url_for('auth.signup') }}">
+                    Sign Up
+                </a>
+                <a class="navbar-brand" style="color:white; font-weight:600;" href="{{ url_for('auth.logout') }}">
+                    Logout
+                </a>
+        </div>
 
-        <form method="POST" action="/signup">
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Email" autofocus="" required>
-                </div>
-            </div>
+        <div class="wrapper fadeInDown">
+            <div id="formContent">
 
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="text" name="first_name" placeholder="First Name" autofocus="" required>
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="text" name="last_name" placeholder="Last Name" autofocus="" required>
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="tel" pattern="[0-9]{10}" name="phone_no" placeholder="Phone No." autofocus="" required>
-                </div>
-            </div>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="fadeIn first">
+                        {{ messages[0] }}<br> Go to <a href="{{ url_for('auth.login') }}">login page</a>.
+                    </div>
+                {% endif %}
+            {% endwith %}
 
-            <div class="field">
-                <div class="control">Password:
-                    <input class="input is-large" type="password" name="password" placeholder="Password" required>
-                </div>
-            </div>
-            
-            <div class="field">
-                <div class="control">Address:
-                    <input class="input is-large" type="text" name="house" placeholder="House No.">
-                    <input class="input is-large" type="text" name="street" placeholder="Street">
-                    <input class="input is-large" type="text" name="locality" placeholder="Locality">
-                    <input class="input is-large" type="text" name="city" placeholder="City">
-                    <input class="input is-large" type="text" name="state" placeholder="State">
-                    <input class="input is-large" type="text" name="pincode" placeholder="Pin Code">
-                    <input class="input is-large" type="text" name="country" placeholder="Country">
+              
+          
+             
+              <form method="POST" action="/signup">
+                <input type="email" id="login" class="fadeIn second" name="email" placeholder="Email ID" required>
+
+                <input type="text" id="name" class="fadeIn second" name="first_name" placeholder="First Name" required> 
+
+                <input type="text" id="name" class="fadeIn second" name="last_name" placeholder="Last Name" required> 
+
+                <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password">
+
+                <input type="text" id="phone_no" class="fadeIn second" name="phone_no" placeholder="Phone Number" required> 
+
+                <input type="text" id="house_no" class="fadeIn second" name="house" placeholder="House No." required> 
+
+                <input type="text" id="street" class="fadeIn second" name="street" placeholder="Street" required> 
+
+                <input type="text" id="locality" class="fadeIn second" name="locality" placeholder="Locality" required> 
+
+                <input type="text" id="city" class="fadeIn second" name="city" placeholder="City" required> 
+
+                <input type="text" id="state" class="fadeIn second" name="state" placeholder="State" required> 
+
+                <input type="text" id="pincode" class="fadeIn second" name="pincode" placeholder="Pincode" required> 
+
+                <input type="text" id="country" class="fadeIn second" name="country" placeholder="Country" required> 
+
+                <input class="input is-large fadeIn second" type="date" name="dob" placeholder="DOB">
+              </br></br>
+                <div class="field">
+                    <div class="control"> Select Role:
+                        <select id="role" name="role">
+                            <option value="0" disabled selected>Select</option>
+                            {% for rolei in roles %}
+                            <option value={{rolei.role}}>{{rolei.role_name}}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- <input class="input is-large" type="text" name="password" placeholder="Password"> -->
+                    </div>
                 </div>
 
-            </div>
-            <div class="field">
-                <div class="control">Date of Birth:
-                    <input class="input is-large" type="date" name="dob" placeholder="DOB">
-                </div>
-            </div>
+            </br></br>
 
-            <div class="field">
-                <div class="control"> Select Role:
-                    <select id="role" name="role">
-                        <option value="0" disabled selected>Select</option>
-                        {% for rolei in roles %}
-                        <option value={{rolei.role}}>{{rolei.role_name}}</option>
-                        {% endfor %}
-                    </select>
-                    <!-- <input class="input is-large" type="text" name="password" placeholder="Password"> -->
-                </div>
+                <input type="submit" class="fadeIn fourth" value="Sign Up">
+              </form>
             </div>
-            <button class="button is-block is-info is-large is-fullwidth">Sign Up</button>
-        </form>
-    </div>
-</div>
+          </div>
+            </div>
+        </div>
 {% endblock %}
