@@ -125,12 +125,13 @@ def viewContent():
 
 @educator.route("/viewPdf/<content_id>")
 def viewPdf(content_id=None):
-    pdf = MentorContent.query(content_id=content_id).data
+    # return f'{content_id}'
+    pdf = db.session.query(MentorContent).filter(MentorContent.content_id == content_id).first().data
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
     response.headers["Content-Disposition"] = "inline; filename=%s.pdf" % "yourfilename"
     return response
-
+    
 
 @educator.route('/getAllStudents',methods=['GET','POST'])
 def getAllStudents():
